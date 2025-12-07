@@ -1,0 +1,3325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProSpeaker - 1-Minute Workout</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0F172A;
+      color: #fff;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Home View */
+    .home-view { display: block; }
+    .home-view.hidden { display: none; }
+
+    .header {
+      padding: 24px 0 32px;
+      text-align: center;
+    }
+    .app-logo {
+      font-size: 48px;
+      margin-bottom: 8px;
+    }
+    .app-name {
+      font-size: 28px;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 4px;
+      letter-spacing: -0.5px;
+    }
+    .app-tagline {
+      font-size: 15px;
+      color: #94A3B8;
+      line-height: 1.6;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+    .app-tagline-main {
+      display: block;
+      font-size: 18px;
+      font-weight: 700;
+      color: #E2E8F0;
+      margin-bottom: 4px;
+    }
+    .app-tagline-sub {
+      display: block;
+      font-size: 14px;
+      color: #94A3B8;
+    }
+
+    /* Section Divider */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      margin: 40px 0 24px;
+      gap: 16px;
+    }
+    .section-divider-line {
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to right, transparent, #475569, transparent);
+    }
+    .section-divider-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #F8FAFC;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      padding: 8px 20px;
+      background: linear-gradient(135deg, #1E293B 0%, #334155 100%);
+      border-radius: 20px;
+      border: 1px solid #475569;
+    }
+
+    /* Horizontal Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+
+    .prompt-card {
+      background: #1E293B;
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .prompt-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+    .card-gradient {
+      height: 6px;
+      flex-shrink: 0;
+    }
+    .card-content {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .card-icon {
+      font-size: 40px;
+    }
+    .category-badge {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #94A3B8;
+    }
+    .card-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+    }
+    .card-prompt {
+      font-size: 15px;
+      color: #CBD5E1;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      flex: 1;
+    }
+    .hints-container {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .hint-row {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .hint-row:last-child { margin-bottom: 0; }
+    .hint-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 3px;
+      background: #64748B;
+      margin-right: 12px;
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+    .hint-text {
+      color: #94A3B8;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .start-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #3B82F6;
+      border-radius: 12px;
+      padding: 16px;
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s;
+    }
+    .start-button:hover {
+      background: #2563EB;
+    }
+    .start-arrow {
+      margin-left: 8px;
+    }
+
+    .free-talk-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(135deg, #1E3A5F 0%, #1E293B 100%);
+      padding: 24px 28px;
+      border-radius: 20px;
+      border: 2px solid #3B82F6;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.15);
+    }
+    .free-talk-card:hover {
+      border-color: #60A5FA;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(59, 130, 246, 0.25);
+    }
+    .free-talk-content {
+      display: flex;
+      align-items: center;
+    }
+    .free-talk-icon {
+      font-size: 40px;
+      margin-right: 20px;
+    }
+    .free-talk-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+    .free-talk-subtitle {
+      font-size: 14px;
+      color: #94A3B8;
+      margin-top: 4px;
+    }
+    .free-talk-arrow {
+      font-size: 24px;
+      color: #64748B;
+    }
+
+    /* Recording View */
+    .recording-view {
+      display: none;
+      max-width: 700px;
+      margin: 0 auto;
+      padding-top: 20px;
+    }
+    .recording-view.active { display: block; }
+
+    .back-button {
+      background: none;
+      border: none;
+      color: #94A3B8;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 8px 0;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .back-button:hover { color: #FFFFFF; }
+
+    .recording-prompt {
+      background: #1E293B;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .recording-prompt-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .recording-prompt-icon {
+      font-size: 24px;
+    }
+    .recording-prompt-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+    .recording-prompt-text {
+      font-size: 14px;
+      color: #CBD5E1;
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+    .recording-hints {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 10px;
+      padding: 12px;
+    }
+    .recording-hints-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: #3B82F6;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .recording-hint-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .recording-hint-row:last-child { margin-bottom: 0; }
+    .recording-hint-number {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #3B82F6;
+      color: #FFFFFF;
+      font-size: 10px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+    .recording-hint-text {
+      color: #94A3B8;
+      font-size: 13px;
+    }
+
+    /* Compact Recording Controls */
+    .recording-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      background: #1E293B;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .timer-display {
+      text-align: center;
+    }
+    .timer {
+      font-size: 48px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: #FFFFFF;
+    }
+    .timer-label {
+      font-size: 14px;
+      color: #64748B;
+    }
+    .record-btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: none;
+      background: #DC2626;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .record-btn:hover { transform: scale(1.05); }
+    .record-btn.recording {
+      background: #991B1B;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+      50% { box-shadow: 0 0 0 20px rgba(220, 38, 38, 0); }
+    }
+    .record-btn .icon {
+      width: 32px;
+      height: 32px;
+      background: #fff;
+      border-radius: 50%;
+    }
+    .record-btn.recording .icon {
+      border-radius: 4px;
+      width: 24px;
+      height: 24px;
+    }
+    .record-hint {
+      color: #64748B;
+      font-size: 14px;
+      text-align: center;
+      min-width: 100px;
+    }
+
+    .status {
+      text-align: center;
+      padding: 16px;
+      background: #1E293B;
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+    .status.error { background: #7F1D1D; }
+    .status.analyzing { background: #1E3A5F; }
+
+    /* Live Metrics Panel - Compact */
+    .live-metrics {
+      display: none;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .live-metrics.active { display: grid; }
+    .live-metric {
+      background: #1E293B;
+      padding: 12px 8px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .live-metric-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #FFFFFF;
+      font-variant-numeric: tabular-nums;
+    }
+    .live-metric-value.warning { color: #F59E0B; }
+    .live-metric-value.danger { color: #EF4444; }
+    .live-metric-value.pronunciation-issues { color: #F59E0B; }
+    .live-metric-value.pronunciation-issues.good { color: #10B981; }
+
+    /* Pronunciation Feedback Panel */
+    .pronunciation-feedback {
+      background: linear-gradient(135deg, #7C2D12 0%, #451A03 100%);
+      border: 1px solid #F59E0B;
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+    }
+    .feedback-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #FCD34D;
+    }
+    .feedback-words {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .feedback-word {
+      background: rgba(245, 158, 11, 0.2);
+      border: 1px solid #F59E0B;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 13px;
+      color: #FCD34D;
+    }
+    .feedback-word .accuracy {
+      font-size: 11px;
+      color: #FBBF24;
+      margin-left: 4px;
+    }
+    .live-metric-label {
+      font-size: 10px;
+      color: #64748B;
+      margin-top: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Live Transcript */
+    .live-transcript {
+      display: none;
+      background: #1E293B;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      min-height: 80px;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    .live-transcript.active { display: block; }
+    .live-transcript-title {
+      font-size: 11px;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #EF4444;
+      animation: blink 1s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .live-transcript-text {
+      font-size: 14px;
+      line-height: 1.5;
+      color: #CBD5E1;
+    }
+    .live-transcript-text .interim {
+      color: #64748B;
+      font-style: italic;
+    }
+    .live-transcript-text .filler {
+      color: #F59E0B;
+      background: rgba(245, 158, 11, 0.15);
+      padding: 1px 3px;
+      border-radius: 3px;
+    }
+    .live-transcript-text .mispronounced {
+      color: #EF4444;
+      background: rgba(239, 68, 68, 0.15);
+      padding: 1px 3px;
+      border-radius: 3px;
+      text-decoration: underline wavy #EF4444;
+    }
+
+    /* Results View */
+    .results {
+      display: none;
+      margin-top: 16px;
+    }
+    .results.show { display: block; }
+
+    .score-card {
+      background: #1E293B;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .score-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .score-badge {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #10B981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 700;
+      flex-shrink: 0;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .score-badge:hover { transform: scale(1.05); }
+    .score-badge.medium { background: #F59E0B; }
+    .score-badge.low { background: #EF4444; }
+    .score-info { flex: 1; }
+    .score-label {
+      font-size: 20px;
+      font-weight: 600;
+      color: #FFFFFF;
+    }
+    /* Score Breakdown Panel - always visible */
+    .score-breakdown {
+      display: block;
+      background: #0F172A;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .score-breakdown-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #FFFFFF;
+      margin-bottom: 12px;
+    }
+    .score-breakdown-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .breakdown-item {
+      background: #1E293B;
+      border-radius: 10px;
+      padding: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .breakdown-item:hover { background: #334155; }
+    .breakdown-item.active { border: 2px solid #3B82F6; }
+    .breakdown-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .breakdown-label {
+      font-size: 12px;
+      color: #94A3B8;
+    }
+    .breakdown-score {
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .breakdown-score.good { color: #10B981; }
+    .breakdown-score.medium { color: #F59E0B; }
+    .breakdown-score.low { color: #EF4444; }
+    .breakdown-bar {
+      height: 4px;
+      background: #334155;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .breakdown-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.3s;
+    }
+    .breakdown-fill.good { background: #10B981; }
+    .breakdown-fill.medium { background: #F59E0B; }
+    .breakdown-fill.low { background: #EF4444; }
+    .breakdown-detail {
+      display: none;
+      margin-top: 12px;
+      padding: 12px;
+      background: #1E293B;
+      border-radius: 10px;
+      font-size: 13px;
+      color: #CBD5E1;
+      line-height: 1.5;
+    }
+    .breakdown-detail.show { display: block; }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .metric {
+      background: #0F172A;
+      padding: 14px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .metric-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+    .metric-label {
+      font-size: 11px;
+      color: #64748B;
+      margin-top: 2px;
+    }
+
+    .section {
+      background: #1E293B;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #64748B;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .section-content {
+      font-size: 14px;
+      color: #CBD5E1;
+      line-height: 1.5;
+    }
+
+    /* Coaching Tips as bullet list */
+    .coaching-tips-list {
+      list-style: none;
+      padding: 0;
+    }
+    .coaching-tips-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #334155;
+      color: #FCD34D;
+      display: flex;
+      align-items: flex-start;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .coaching-tips-list li:last-child { border-bottom: none; }
+    .coaching-tips-list li::before {
+      content: '!';
+      background: #F59E0B;
+      color: #0F172A;
+      font-weight: 700;
+      font-size: 10px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* Mispronounced Words Grid */
+    .mispronounced-words-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .mispronounced-word-card {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 8px 14px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .mispronounced-word-card .word {
+      font-size: 15px;
+      font-weight: 600;
+      color: #F87171;
+    }
+    .mispronounced-word-card .accuracy-badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+    .accuracy-badge.low {
+      background: #7F1D1D;
+      color: #FECACA;
+    }
+    .accuracy-badge.medium {
+      background: #713F12;
+      color: #FEF3C7;
+    }
+
+    /* Reference vs Transcript Comparison */
+    .comparison-section {
+      margin-bottom: 20px;
+    }
+    .comparison-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .comparison-text {
+      line-height: 1.8;
+      font-size: 15px;
+    }
+    .diff-correct {
+      color: #E2E8F0;
+    }
+    .diff-missed {
+      color: #94A3B8;
+      text-decoration: line-through;
+      background: rgba(239, 68, 68, 0.1);
+      padding: 2px 4px;
+      border-radius: 4px;
+      cursor: help;
+    }
+    .diff-mispronounced {
+      color: #FBBF24;
+      background: rgba(251, 191, 36, 0.15);
+      padding: 2px 4px;
+      border-radius: 4px;
+      border-bottom: 2px wavy #F59E0B;
+      cursor: help;
+    }
+    .diff-extra {
+      color: #60A5FA;
+      background: rgba(96, 165, 250, 0.15);
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-style: italic;
+      cursor: help;
+    }
+    .diff-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #334155;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #94A3B8;
+    }
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+    .legend-dot.missed { background: rgba(239, 68, 68, 0.3); }
+    .legend-dot.mispronounced { background: rgba(251, 191, 36, 0.3); }
+    .legend-dot.extra { background: rgba(96, 165, 250, 0.3); }
+
+    /* Comparison section for reading results */
+    .diff-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+      font-size: 12px;
+    }
+    .diff-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #94A3B8;
+    }
+    .diff-correct-dot, .diff-missed-dot, .diff-mispronounced-dot, .diff-extra-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      display: inline-block;
+    }
+    .diff-correct-dot { background: #10B981; }
+    .diff-missed-dot { background: rgba(239, 68, 68, 0.5); }
+    .diff-mispronounced-dot { background: rgba(251, 191, 36, 0.6); }
+    .diff-extra-dot { background: rgba(96, 165, 250, 0.6); }
+
+    .comparison-box {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .comparison-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #64748B;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .comparison-text {
+      font-size: 14px;
+      line-height: 1.8;
+      color: #CBD5E1;
+    }
+    .mispronounced-word-card.missed {
+      border-color: #EF4444;
+      background: rgba(239, 68, 68, 0.08);
+    }
+    .mispronounced-word-card.missed .word {
+      color: #F87171;
+    }
+
+    /* Transcript with highlighted errors */
+    .transcript-word {
+      display: inline;
+    }
+    .transcript-word.error {
+      color: #EF4444;
+      background: rgba(239, 68, 68, 0.15);
+      padding: 1px 4px;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+    }
+    .transcript-word.error:hover {
+      background: rgba(239, 68, 68, 0.3);
+    }
+    .word-tooltip {
+      display: none;
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1E293B;
+      border: 1px solid #EF4444;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 11px;
+      white-space: nowrap;
+      z-index: 100;
+    }
+    .transcript-word.error:hover .word-tooltip {
+      display: block;
+    }
+
+    .section-content.polished {
+      color: #34D399;
+    }
+
+    .strengths-list {
+      list-style: none;
+    }
+    .strengths-list li {
+      padding: 10px 0;
+      border-bottom: 1px solid #334155;
+      color: #CBD5E1;
+      display: flex;
+      align-items: flex-start;
+      font-size: 14px;
+    }
+    .strengths-list li:last-child { border-bottom: none; }
+    .strengths-list li::before {
+      content: '+';
+      color: #10B981;
+      font-weight: 700;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+
+    /* Areas to Improve */
+    .improvements-list {
+      list-style: none;
+    }
+    .improvements-list li {
+      padding: 10px 0;
+      border-bottom: 1px solid #334155;
+      color: #CBD5E1;
+      display: flex;
+      align-items: flex-start;
+      font-size: 14px;
+    }
+    .improvements-list li:last-child { border-bottom: none; }
+    .improvements-list li::before {
+      content: '-';
+      color: #F59E0B;
+      font-weight: 700;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+
+    .try-again-btn {
+      width: 100%;
+      padding: 16px;
+      background: #3B82F6;
+      border: none;
+      border-radius: 10px;
+      color: #FFFFFF;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+    .try-again-btn:hover { background: #2563EB; }
+
+    /* Listen & Read Section */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 32px 0 16px;
+    }
+    .section-header-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+    .refresh-btn {
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid #3B82F6;
+      color: #3B82F6;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .refresh-btn:hover {
+      background: rgba(59, 130, 246, 0.3);
+    }
+    .refresh-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* AI Digest Card */
+    .digest-card {
+      background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+      border: 1px solid #334155;
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .digest-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .digest-icon {
+      font-size: 32px;
+    }
+    .digest-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+    .digest-subtitle {
+      font-size: 13px;
+      color: #64748B;
+    }
+    .digest-content {
+      font-size: 15px;
+      color: #CBD5E1;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .digest-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .digest-count {
+      font-size: 13px;
+      color: #64748B;
+    }
+    .digest-count strong {
+      color: #3B82F6;
+    }
+
+    /* News Carousel */
+    .news-carousel-container {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .news-carousel {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: 4px 0;
+    }
+    .news-carousel::-webkit-scrollbar {
+      display: none;
+    }
+    .news-carousel .news-card {
+      min-width: 320px;
+      max-width: 320px;
+      flex-shrink: 0;
+    }
+    .carousel-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid #334155;
+      color: #FFFFFF;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      z-index: 10;
+    }
+    .carousel-nav:hover {
+      background: #334155;
+    }
+    .carousel-nav.prev { left: -20px; }
+    .carousel-nav.next { right: -20px; }
+    .carousel-nav:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .carousel-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #334155;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .carousel-dot.active {
+      background: #3B82F6;
+      width: 24px;
+      border-radius: 4px;
+    }
+
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .news-card {
+      background: #1E293B;
+      border-radius: 16px;
+      padding: 20px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .news-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+    .news-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .news-category {
+      background: rgba(59, 130, 246, 0.2);
+      color: #60A5FA;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .news-category.ai { background: rgba(139, 92, 246, 0.2); color: #A78BFA; }
+    .news-category.tech { background: rgba(59, 130, 246, 0.2); color: #60A5FA; }
+    .news-category.startup { background: rgba(16, 185, 129, 0.2); color: #34D399; }
+    .news-category.influencer { background: rgba(245, 158, 11, 0.2); color: #FBBF24; }
+    .news-time {
+      font-size: 12px;
+      color: #64748B;
+    }
+    .news-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .news-summary {
+      font-size: 14px;
+      color: #94A3B8;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .news-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .news-action-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .listen-btn {
+      background: #3B82F6;
+      color: #FFFFFF;
+    }
+    .listen-btn:hover { background: #2563EB; }
+    .read-btn {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .read-btn:hover { background: rgba(16, 185, 129, 0.3); }
+
+    .news-loading {
+      text-align: center;
+      padding: 40px;
+      color: #64748B;
+    }
+    .news-loading .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #334155;
+      border-top-color: #3B82F6;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Listen View */
+    .listen-view {
+      display: none;
+      max-width: 800px;
+      margin: 0 auto;
+      padding-top: 20px;
+    }
+    .listen-view.active { display: block; }
+
+    .listen-header {
+      background: #1E293B;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .listen-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: 8px;
+    }
+    .listen-source {
+      font-size: 14px;
+      color: #64748B;
+    }
+
+    .audio-player {
+      background: #1E293B;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .audio-progress-container {
+      margin-bottom: 16px;
+    }
+    .audio-progress {
+      height: 6px;
+      background: #334155;
+      border-radius: 3px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .audio-progress-fill {
+      height: 100%;
+      background: #3B82F6;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+    .audio-time {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 12px;
+      color: #64748B;
+    }
+    .audio-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+    .audio-btn {
+      background: none;
+      border: none;
+      color: #FFFFFF;
+      cursor: pointer;
+      font-size: 24px;
+      padding: 8px;
+      transition: transform 0.2s;
+    }
+    .audio-btn:hover { transform: scale(1.1); }
+    .play-btn {
+      width: 64px;
+      height: 64px;
+      background: #3B82F6;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+    .play-btn:hover { background: #2563EB; }
+
+    .listen-text-container {
+      background: #1E293B;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .listen-text-title {
+      font-size: 14px;
+      color: #64748B;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .listen-text {
+      font-size: 18px;
+      line-height: 1.8;
+      color: #CBD5E1;
+    }
+    .listen-text .word {
+      display: inline;
+      transition: all 0.15s;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    .listen-text .word.active {
+      background: rgba(59, 130, 246, 0.3);
+      color: #FFFFFF;
+    }
+    .listen-text .word.spoken {
+      color: #94A3B8;
+    }
+
+    .listen-actions {
+      display: flex;
+      gap: 12px;
+    }
+    .listen-action-btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .practice-btn {
+      background: #10B981;
+      color: #FFFFFF;
+    }
+    .practice-btn:hover { background: #059669; }
+
+    /* Read Practice View */
+    .read-view {
+      display: none;
+      max-width: 800px;
+      margin: 0 auto;
+      padding-top: 20px;
+    }
+    .read-view.active { display: block; }
+
+    .read-reference {
+      background: #1E293B;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .read-reference-title {
+      font-size: 14px;
+      color: #64748B;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .read-reference-text {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #CBD5E1;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+      .news-grid {
+        grid-template-columns: 1fr;
+      }
+      .timer {
+        font-size: 40px;
+      }
+      .record-btn {
+        width: 70px;
+        height: 70px;
+      }
+      .record-btn .icon {
+        width: 28px;
+        height: 28px;
+      }
+      .record-btn.recording .icon {
+        width: 20px;
+        height: 20px;
+      }
+      .live-metrics {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .recording-controls {
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+      .score-breakdown-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <div class="container">
+    <!-- Home View -->
+    <div class="home-view" id="homeView">
+      <div class="header">
+        <div class="app-logo">🎙️</div>
+        <h1 class="app-name">ProSpeaker</h1>
+        <p class="app-tagline">
+          <span class="app-tagline-main">1-Minute Speaking Workout, Every Day</span>
+          <span class="app-tagline-sub">Speak with confidence, communicate with impact</span>
+        </p>
+      </div>
+
+      <!-- SPEAK Section -->
+      <div class="section-divider">
+        <div class="section-divider-line"></div>
+        <span class="section-divider-title">Speak</span>
+        <div class="section-divider-line"></div>
+      </div>
+
+      <div class="free-talk-card" onclick="startFreeTalk()">
+        <div class="free-talk-content">
+          <span class="free-talk-icon">🎙️</span>
+          <div>
+            <div class="free-talk-title">Free Talk</div>
+            <div class="free-talk-subtitle">Speak about anything for 1 minute</div>
+          </div>
+        </div>
+        <span class="free-talk-arrow">→</span>
+      </div>
+
+      <div class="cards-grid" id="promptCards"></div>
+
+      <!-- LISTEN & READ Section -->
+      <div class="section-divider">
+        <div class="section-divider-line"></div>
+        <span class="section-divider-title">Listen & Read</span>
+        <div class="section-divider-line"></div>
+      </div>
+
+      <!-- AI Digest Summary -->
+      <div class="digest-card" id="digestCard">
+        <div class="digest-header">
+          <span class="digest-icon">📰</span>
+          <div>
+            <div class="digest-title">Today's AI & Tech Digest</div>
+            <div class="digest-subtitle">1-minute summaries for language practice</div>
+          </div>
+        </div>
+        <div class="digest-content" id="digestContent">
+          Loading today's top stories...
+        </div>
+        <div class="digest-meta">
+          <span class="digest-count"><strong id="newsCount">0</strong> stories available</span>
+          <button class="refresh-btn" id="refreshNewsBtn" onclick="refreshNews()">Refresh</button>
+        </div>
+      </div>
+
+      <!-- News Carousel -->
+      <div class="news-carousel-container" id="newsCarouselContainer" style="display: none;">
+        <button class="carousel-nav prev" onclick="scrollCarousel(-1)">←</button>
+        <div class="news-carousel" id="newsCarousel"></div>
+        <button class="carousel-nav next" onclick="scrollCarousel(1)">→</button>
+        <div class="carousel-dots" id="carouselDots"></div>
+      </div>
+
+      <div class="news-loading" id="newsLoading">
+        <div class="spinner"></div>
+        <p>Loading today's news...</p>
+      </div>
+    </div>
+
+    <!-- Listen View -->
+    <div class="listen-view" id="listenView">
+      <button class="back-button" onclick="goHomeFromListen()">< Back to home</button>
+
+      <div class="listen-header">
+        <h1 class="listen-title" id="listenTitle">Article Title</h1>
+        <p class="listen-source" id="listenSource">Source</p>
+      </div>
+
+      <div class="audio-player">
+        <div class="audio-progress-container">
+          <div class="audio-progress" id="audioProgress" onclick="seekAudio(event)">
+            <div class="audio-progress-fill" id="audioProgressFill"></div>
+          </div>
+          <div class="audio-time">
+            <span id="audioCurrentTime">0:00</span>
+            <span id="audioDuration">0:00</span>
+          </div>
+        </div>
+        <div class="audio-controls">
+          <button class="audio-btn" onclick="rewindAudio()">⏪</button>
+          <button class="audio-btn play-btn" id="playBtn" onclick="togglePlayback()">▶️</button>
+          <button class="audio-btn" onclick="forwardAudio()">⏩</button>
+        </div>
+      </div>
+
+      <div class="listen-text-container">
+        <div class="listen-text-title">Follow along</div>
+        <div class="listen-text" id="listenText"></div>
+      </div>
+
+      <div class="listen-actions">
+        <button class="listen-action-btn practice-btn" onclick="startReadPractice()">Practice Reading This</button>
+      </div>
+    </div>
+
+    <!-- Read Practice View (reuses recording view mechanics) -->
+    <div class="read-view" id="readView">
+      <button class="back-button" onclick="goHomeFromRead()">< Back to home</button>
+
+      <div class="read-reference">
+        <div class="read-reference-title">Reference Text</div>
+        <div class="read-reference-text" id="readReferenceText"></div>
+      </div>
+
+      <!-- Reuse recording components -->
+      <div class="live-metrics" id="readLiveMetrics">
+        <div class="live-metric">
+          <div class="live-metric-value" id="readLiveTimer">0:00</div>
+          <div class="live-metric-label">Time</div>
+        </div>
+        <div class="live-metric">
+          <div class="live-metric-value" id="readLiveWords">0</div>
+          <div class="live-metric-label">Words</div>
+        </div>
+        <div class="live-metric">
+          <div class="live-metric-value" id="readLiveWpm">0</div>
+          <div class="live-metric-label">WPM</div>
+        </div>
+        <div class="live-metric">
+          <div class="live-metric-value" id="readLiveAccuracy">--%</div>
+          <div class="live-metric-label">Accuracy</div>
+        </div>
+        <div class="live-metric">
+          <div class="live-metric-value pronunciation-issues" id="readLiveIssues">0</div>
+          <div class="live-metric-label">Issues</div>
+        </div>
+      </div>
+
+      <!-- Real-time pronunciation feedback panel -->
+      <div class="pronunciation-feedback" id="pronunciationFeedback" style="display: none;">
+        <div class="feedback-header">
+          <span class="feedback-icon">⚠️</span>
+          <span>Pronunciation Tips</span>
+        </div>
+        <div class="feedback-words" id="feedbackWords"></div>
+      </div>
+
+      <div class="live-transcript" id="readLiveTranscript">
+        <div class="live-transcript-title">
+          <div class="live-dot"></div>
+          <span>Your Reading</span>
+        </div>
+        <div class="live-transcript-text" id="readLiveTranscriptText">
+          Start reading to see your words appear here...
+        </div>
+      </div>
+
+      <div class="recording-controls">
+        <div class="timer-display">
+          <div class="timer" id="readTimer">0:00</div>
+          <div class="timer-label">/ 1:00</div>
+        </div>
+        <button class="record-btn" id="readRecordBtn" onclick="toggleReadRecording()">
+          <div class="icon"></div>
+        </button>
+        <p class="record-hint" id="readHint">Tap to start reading</p>
+      </div>
+
+      <div class="status" id="readStatus" style="display: none;"></div>
+
+      <div class="results" id="readResults">
+        <!-- Results will be populated dynamically -->
+      </div>
+    </div>
+
+    <!-- Recording View -->
+    <div class="recording-view" id="recordingView">
+      <button class="back-button" onclick="goHome()">< Back to prompts</button>
+
+      <div class="recording-prompt" id="recordingPrompt"></div>
+
+      <!-- Live Metrics -->
+      <div class="live-metrics" id="liveMetrics">
+        <div class="live-metric">
+          <div class="live-metric-value" id="liveTimer">0:00</div>
+          <div class="live-metric-label">Time</div>
+        </div>
+        <div class="live-metric">
+          <div class="live-metric-value" id="liveWords">0</div>
+          <div class="live-metric-label">Words</div>
+        </div>
+        <div class="live-metric">
+          <div class="live-metric-value" id="liveWpm">0</div>
+          <div class="live-metric-label">WPM</div>
+        </div>
+        <div class="live-metric">
+          <div class="live-metric-value" id="liveFillers">0</div>
+          <div class="live-metric-label">Fillers</div>
+        </div>
+      </div>
+
+      <!-- Live Transcript -->
+      <div class="live-transcript" id="liveTranscript">
+        <div class="live-transcript-title">
+          <div class="live-dot"></div>
+          <span>Live Transcript</span>
+        </div>
+        <div class="live-transcript-text" id="liveTranscriptText">
+          Start speaking to see your words appear here...
+        </div>
+      </div>
+
+      <!-- Compact Recording Controls -->
+      <div class="recording-controls">
+        <div class="timer-display">
+          <div class="timer" id="timer">0:00</div>
+          <div class="timer-label">/ 0:30</div>
+        </div>
+        <button class="record-btn" id="recordBtn">
+          <div class="icon"></div>
+        </button>
+        <p class="record-hint" id="hint">Tap to start</p>
+      </div>
+
+      <div class="status" id="status" style="display: none;"></div>
+
+      <div class="results" id="results">
+        <div class="score-card">
+          <div class="score-header">
+            <div class="score-badge" id="scoreBadge">--</div>
+            <div class="score-info">
+              <div class="score-label" id="scoreLabel">--</div>
+            </div>
+          </div>
+
+          <!-- Score Breakdown -->
+          <div class="score-breakdown" id="scoreBreakdown">
+            <div class="score-breakdown-title">Score Breakdown</div>
+            <div class="score-breakdown-grid">
+              <div class="breakdown-item" onclick="showBreakdownDetail('pronunciation')">
+                <div class="breakdown-header">
+                  <span class="breakdown-label">Pronunciation</span>
+                  <span class="breakdown-score" id="pronunciationScore">--</span>
+                </div>
+                <div class="breakdown-bar">
+                  <div class="breakdown-fill" id="pronunciationBar" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="breakdown-item" onclick="showBreakdownDetail('fluency')">
+                <div class="breakdown-header">
+                  <span class="breakdown-label">Fluency</span>
+                  <span class="breakdown-score" id="fluencyScore">--</span>
+                </div>
+                <div class="breakdown-bar">
+                  <div class="breakdown-fill" id="fluencyBar" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="breakdown-item" onclick="showBreakdownDetail('structure')">
+                <div class="breakdown-header">
+                  <span class="breakdown-label">Structure</span>
+                  <span class="breakdown-score" id="structureScore">--</span>
+                </div>
+                <div class="breakdown-bar">
+                  <div class="breakdown-fill" id="structureBar" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="breakdown-item" onclick="showBreakdownDetail('clarity')">
+                <div class="breakdown-header">
+                  <span class="breakdown-label">Clarity</span>
+                  <span class="breakdown-score" id="clarityScore">--</span>
+                </div>
+                <div class="breakdown-bar">
+                  <div class="breakdown-fill" id="clarityBar" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+            <div class="breakdown-detail" id="breakdownDetail"></div>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric">
+              <div class="metric-value" id="wordCount">--</div>
+              <div class="metric-label">Words</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value" id="wpm">--</div>
+              <div class="metric-label">WPM</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value" id="fillers">--</div>
+              <div class="metric-label">Fillers</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Coaching Tips</div>
+          <ul class="coaching-tips-list" id="coachingTips"></ul>
+        </div>
+
+        <div class="section">
+          <div class="section-title">What You Said (click highlighted words for details)</div>
+          <div class="section-content" id="transcript">--</div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Polished Version</div>
+          <div class="section-content polished" id="polished">--</div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Strengths</div>
+          <ul class="strengths-list" id="strengths"></ul>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Areas to Improve</div>
+          <ul class="improvements-list" id="improvements"></ul>
+        </div>
+
+        <button class="try-again-btn" onclick="goHome()">Try Another Prompt</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Prompts data
+    const PROMPTS = [
+      {
+        id: '1',
+        mode: 'professional',
+        title: 'Project Update',
+        prompt: 'Share a 1-minute update on what you accomplished this week.',
+        hints: ['Lead with your biggest win', 'Mention one challenge you solved', 'Share your focus for next week'],
+        category: 'Work',
+        icon: '📊',
+        gradient: '#667eea',
+      },
+      {
+        id: '2',
+        mode: 'professional',
+        title: 'Introduce Yourself',
+        prompt: 'You just joined a new team meeting. Introduce yourself!',
+        hints: ['Your name and role', 'What you bring to the team', 'A fun fact about you'],
+        category: 'Networking',
+        icon: '👋',
+        gradient: '#f093fb',
+      },
+      {
+        id: '3',
+        mode: 'casual',
+        title: 'Weekend Story',
+        prompt: 'Tell a friend about something interesting from your weekend.',
+        hints: ['Set the scene - where were you?', 'What happened?', 'Why was it memorable?'],
+        category: 'Social',
+        icon: '☀️',
+        gradient: '#4facfe',
+      },
+    ];
+
+    let currentPrompt = null;
+    let audioContext;
+    let mediaStream;
+    let processor;
+    let audioChunks = [];
+    let isRecording = false;
+    let startTime;
+    let timerInterval;
+    let socket = null;
+    let sessionId = null;
+    let finalTranscript = '';
+    let interimTranscript = '';
+    let wordsWithScores = [];
+    let localFillerCount = 0;
+
+    const SAMPLE_RATE = 16000;
+    const FILLER_WORDS = ['um', 'uh', 'er', 'ah', 'like', 'you know', 'so', 'actually', 'basically', 'literally', 'right', 'i mean', 'kind of', 'sort of'];
+
+    // Initialize prompt cards
+    function initPromptCards() {
+      const container = document.getElementById('promptCards');
+      container.innerHTML = PROMPTS.map(prompt => `
+        <div class="prompt-card" onclick="selectPrompt('${prompt.id}')">
+          <div class="card-gradient" style="background: ${prompt.gradient}"></div>
+          <div class="card-content">
+            <div class="card-header">
+              <span class="card-icon">${prompt.icon}</span>
+              <span class="category-badge">${prompt.category}</span>
+            </div>
+            <h2 class="card-title">${prompt.title}</h2>
+            <p class="card-prompt">${prompt.prompt}</p>
+            <div class="hints-container">
+              ${prompt.hints.map(hint => `
+                <div class="hint-row">
+                  <div class="hint-dot"></div>
+                  <span class="hint-text">${hint}</span>
+                </div>
+              `).join('')}
+            </div>
+            <button class="start-button">
+              Start Speaking <span class="start-arrow">-></span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectPrompt(promptId) {
+      currentPrompt = PROMPTS.find(p => p.id === promptId);
+      showRecordingView();
+    }
+
+    function startFreeTalk() {
+      currentPrompt = {
+        id: 'free',
+        mode: 'free_talk',
+        title: 'Free Talk',
+        prompt: 'Speak about anything for 1 minute. Practice makes perfect!',
+        hints: ['Pick any topic you like', 'Focus on speaking clearly', 'Try to fill the full minute'],
+        category: 'Free',
+        icon: '🎙️',
+        gradient: '#8B5CF6',
+      };
+      showRecordingView();
+    }
+
+    function showRecordingView() {
+      document.getElementById('homeView').classList.add('hidden');
+      document.getElementById('recordingView').classList.add('active');
+      document.getElementById('results').classList.remove('show');
+      document.getElementById('status').style.display = 'none';
+      document.getElementById('timer').textContent = '0:00';
+      document.getElementById('scoreBreakdown').classList.remove('show');
+
+      // Reset live feedback
+      document.getElementById('liveMetrics').classList.remove('active');
+      document.getElementById('liveTranscript').classList.remove('active');
+      document.getElementById('liveTimer').textContent = '0:00';
+      document.getElementById('liveWords').textContent = '0';
+      document.getElementById('liveWpm').textContent = '0';
+      document.getElementById('liveFillers').textContent = '0';
+      document.getElementById('liveTranscriptText').textContent = 'Start speaking to see your words appear here...';
+      finalTranscript = '';
+      interimTranscript = '';
+      wordsWithScores = [];
+      localFillerCount = 0;
+
+      const promptEl = document.getElementById('recordingPrompt');
+      const hintsHtml = currentPrompt.hints.length > 0 ? `
+        <div class="recording-hints">
+          <div class="recording-hints-title">Remember to include:</div>
+          ${currentPrompt.hints.map((hint, idx) => `
+            <div class="recording-hint-row">
+              <span class="recording-hint-number">${idx + 1}</span>
+              <span class="recording-hint-text">${hint}</span>
+            </div>
+          `).join('')}
+        </div>
+      ` : '';
+
+      promptEl.innerHTML = `
+        <div class="recording-prompt-header">
+          <span class="recording-prompt-icon">${currentPrompt.icon}</span>
+          <span class="recording-prompt-title">${currentPrompt.title}</span>
+        </div>
+        <div class="recording-prompt-text">${currentPrompt.prompt}</div>
+        ${hintsHtml}
+      `;
+    }
+
+    function goHome() {
+      document.getElementById('homeView').classList.remove('hidden');
+      document.getElementById('recordingView').classList.remove('active');
+      if (isRecording) stopRecording(false); // Don't analyze when going home
+      // Clean up socket connection
+      if (socket) {
+        socket.disconnect();
+        socket = null;
+        sessionId = null;
+      }
+    }
+
+    // Recording functionality
+    const recordBtn = document.getElementById('recordBtn');
+    const timer = document.getElementById('timer');
+    const hint = document.getElementById('hint');
+    const status = document.getElementById('status');
+    const results = document.getElementById('results');
+
+    recordBtn.addEventListener('click', async () => {
+      if (!isRecording) {
+        await startRecording();
+      } else {
+        stopRecording(true); // Analyze when user clicks stop
+      }
+    });
+
+    async function startRecording() {
+      try {
+        mediaStream = await navigator.mediaDevices.getUserMedia({
+          audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true }
+        });
+
+        // Create audio context - browser may use different sample rate
+        audioContext = new AudioContext();
+        const actualSampleRate = audioContext.sampleRate;
+        console.log('Audio context sample rate:', actualSampleRate);
+
+        const source = audioContext.createMediaStreamSource(mediaStream);
+        processor = audioContext.createScriptProcessor(4096, 1, 1);
+        audioChunks = [];
+
+        // Initialize WebSocket connection
+        initSocket();
+
+        processor.onaudioprocess = (e) => {
+          if (isRecording) {
+            const inputData = e.inputBuffer.getChannelData(0);
+
+            // Resample if needed (browser often uses 44100Hz or 48000Hz)
+            let pcmData;
+            if (actualSampleRate !== SAMPLE_RATE) {
+              // Simple linear resampling to 16kHz
+              const ratio = actualSampleRate / SAMPLE_RATE;
+              const newLength = Math.round(inputData.length / ratio);
+              pcmData = new Int16Array(newLength);
+              for (let i = 0; i < newLength; i++) {
+                const srcIndex = Math.min(Math.floor(i * ratio), inputData.length - 1);
+                const s = Math.max(-1, Math.min(1, inputData[srcIndex]));
+                pcmData[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+              }
+            } else {
+              pcmData = new Int16Array(inputData.length);
+              for (let i = 0; i < inputData.length; i++) {
+                const s = Math.max(-1, Math.min(1, inputData[i]));
+                pcmData[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+              }
+            }
+
+            audioChunks.push(pcmData);
+
+            // Send audio chunk via WebSocket for real-time feedback
+            if (socket && socket.connected && sessionId) {
+              socket.emit('audio:chunk', pcmData.buffer.slice(0));
+            }
+          }
+        };
+
+        source.connect(processor);
+        processor.connect(audioContext.destination);
+
+        isRecording = true;
+        startTime = Date.now();
+        recordBtn.classList.add('recording');
+        hint.textContent = 'Tap to stop';
+        status.style.display = 'none';
+        results.classList.remove('show');
+
+        // Show live feedback panels
+        document.getElementById('liveMetrics').classList.add('active');
+        document.getElementById('liveTranscript').classList.add('active');
+
+        timerInterval = setInterval(updateTimer, 100);
+        // Auto-stop at 60 seconds
+        setTimeout(() => { if (isRecording) stopRecording(true); }, 60000);
+
+      } catch (err) {
+        showStatus('Microphone access denied: ' + err.message, 'error');
+      }
+    }
+
+    function initSocket() {
+      if (socket) {
+        socket.disconnect();
+      }
+
+      socket = io();
+
+      socket.on('connect', () => {
+        console.log('Socket connected');
+        // Start streaming session
+        socket.emit('session:start', {
+          mode: currentPrompt.mode,
+          promptText: currentPrompt.prompt,
+        });
+      });
+
+      socket.on('session:started', (data) => {
+        console.log('Session started:', data);
+        sessionId = data.timestamp;
+      });
+
+      socket.on('session:update', (data) => {
+        console.log('Session update:', data);
+        updateLiveFeedback(data);
+      });
+
+      socket.on('session:analyzing', (data) => {
+        console.log('Session analyzing:', data);
+        showStatus(data.message || 'Analyzing...', 'analyzing');
+      });
+
+      socket.on('session:complete', (data) => {
+        console.log('Session complete:', data);
+        if (data.transcript && !data.error) {
+          showStreamingResults(data);
+        } else {
+          showStatus(data.error || 'No speech detected', 'error');
+        }
+      });
+
+      socket.on('session:error', (data) => {
+        console.error('Session error:', data);
+        showStatus(data.message || 'An error occurred', 'error');
+      });
+
+      socket.on('disconnect', () => {
+        console.log('Socket disconnected');
+        sessionId = null;
+      });
+    }
+
+    function countLocalFillers(text) {
+      if (!text) return 0;
+      const lower = text.toLowerCase();
+      let count = 0;
+      FILLER_WORDS.forEach(filler => {
+        const regex = new RegExp(`\\b${filler}\\b`, 'gi');
+        const matches = lower.match(regex);
+        if (matches) count += matches.length;
+      });
+      return count;
+    }
+
+    function updateLiveFeedback(data) {
+      // Update live metrics
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const mins = Math.floor(elapsed / 60);
+      const secs = elapsed % 60;
+      document.getElementById('liveTimer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+
+      if (data.wordCount !== undefined) {
+        document.getElementById('liveWords').textContent = data.wordCount;
+      }
+      if (data.wpm !== undefined) {
+        document.getElementById('liveWpm').textContent = data.wpm;
+      }
+
+      // Store word scores for highlighting
+      if (data.words) {
+        wordsWithScores = data.words;
+      }
+
+      // Update transcript
+      if (data.type === 'final' && data.transcript) {
+        finalTranscript = data.transcript;
+        // Count fillers locally from final transcript
+        localFillerCount = countLocalFillers(finalTranscript);
+      } else if (data.type === 'interim' && data.transcript) {
+        interimTranscript = data.transcript;
+      }
+
+      // Update filler count from server or local count
+      const fillerCount = data.fillerCount !== undefined ? data.fillerCount : localFillerCount;
+      const fillerEl = document.getElementById('liveFillers');
+      fillerEl.textContent = fillerCount;
+      fillerEl.className = 'live-metric-value' + (fillerCount > 5 ? ' danger' : fillerCount > 2 ? ' warning' : '');
+
+      updateTranscriptDisplay();
+    }
+
+    function updateTranscriptDisplay() {
+      const transcriptEl = document.getElementById('liveTranscriptText');
+      let html = highlightTranscript(finalTranscript, wordsWithScores);
+
+      if (interimTranscript) {
+        html += `<span class="interim"> ${interimTranscript}</span>`;
+      }
+
+      if (!html.trim()) {
+        html = 'Start speaking to see your words appear here...';
+      }
+
+      transcriptEl.innerHTML = html;
+
+      // Auto-scroll to bottom
+      const container = document.getElementById('liveTranscript');
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function highlightTranscript(text, words) {
+      if (!text) return '';
+
+      // First highlight fillers
+      let result = text;
+      FILLER_WORDS.forEach(filler => {
+        const regex = new RegExp(`\\b(${filler})\\b`, 'gi');
+        result = result.replace(regex, '<span class="filler">$1</span>');
+      });
+
+      // Then highlight mispronounced words if we have word scores
+      if (words && words.length > 0) {
+        words.forEach(w => {
+          if (w.accuracy < 60) {
+            const wordRegex = new RegExp(`\\b(${w.word})\\b`, 'gi');
+            result = result.replace(wordRegex, `<span class="mispronounced" title="Accuracy: ${w.accuracy}%">$1</span>`);
+          }
+        });
+      }
+
+      return result;
+    }
+
+    function stopRecording(shouldAnalyze = true) {
+      if (isRecording) {
+        isRecording = false;
+        clearInterval(timerInterval);
+        recordBtn.classList.remove('recording');
+        hint.textContent = 'Tap to start';
+
+        // Stop audio processing
+        if (processor) {
+          processor.disconnect();
+        }
+        if (mediaStream) {
+          mediaStream.getTracks().forEach(track => track.stop());
+        }
+        if (audioContext && audioContext.state !== 'closed') {
+          audioContext.close();
+        }
+
+        if (shouldAnalyze) {
+          // Stop WebSocket session for final analysis
+          if (socket && socket.connected && sessionId) {
+            showStatus('Analyzing your speech...', 'analyzing');
+            socket.emit('session:stop');
+          } else {
+            // Fallback to REST API if WebSocket not available
+            processAndSendAudio();
+          }
+        }
+      }
+    }
+
+    function updateTimer() {
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const mins = Math.floor(elapsed / 60);
+      const secs = elapsed % 60;
+      timer.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+      document.getElementById('liveTimer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    async function processAndSendAudio() {
+      showStatus('Analyzing your speech...', 'analyzing');
+
+      try {
+        const totalLength = audioChunks.reduce((sum, chunk) => sum + chunk.length, 0);
+        const combinedPcm = new Int16Array(totalLength);
+        let offset = 0;
+        for (const chunk of audioChunks) {
+          combinedPcm.set(chunk, offset);
+          offset += chunk.length;
+        }
+
+        if (totalLength < SAMPLE_RATE) {
+          showStatus('Recording too short. Please speak for at least 1 second.', 'error');
+          return;
+        }
+
+        const wavBuffer = createWavFile(combinedPcm, SAMPLE_RATE);
+        const base64Audio = arrayBufferToBase64(wavBuffer);
+
+        const response = await fetch('/api/sessions/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ audio: base64Audio, mode: currentPrompt.mode })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          showResults(data.data);
+        } else {
+          showStatus(data.error?.message || 'Analysis failed', 'error');
+        }
+      } catch (err) {
+        showStatus('Error: ' + err.message, 'error');
+      }
+    }
+
+    function createWavFile(pcmData, sampleRate) {
+      const numChannels = 1;
+      const bitsPerSample = 16;
+      const bytesPerSample = bitsPerSample / 8;
+      const blockAlign = numChannels * bytesPerSample;
+      const byteRate = sampleRate * blockAlign;
+      const dataSize = pcmData.length * bytesPerSample;
+      const bufferSize = 44 + dataSize;
+
+      const buffer = new ArrayBuffer(bufferSize);
+      const view = new DataView(buffer);
+
+      writeString(view, 0, 'RIFF');
+      view.setUint32(4, bufferSize - 8, true);
+      writeString(view, 8, 'WAVE');
+      writeString(view, 12, 'fmt ');
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true);
+      view.setUint16(22, numChannels, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, byteRate, true);
+      view.setUint16(32, blockAlign, true);
+      view.setUint16(34, bitsPerSample, true);
+      writeString(view, 36, 'data');
+      view.setUint32(40, dataSize, true);
+
+      for (let i = 0; i < pcmData.length; i++) {
+        view.setInt16(44 + i * 2, pcmData[i], true);
+      }
+      return buffer;
+    }
+
+    function writeString(view, offset, string) {
+      for (let i = 0; i < string.length; i++) {
+        view.setUint8(offset + i, string.charCodeAt(i));
+      }
+    }
+
+    function arrayBufferToBase64(buffer) {
+      const bytes = new Uint8Array(buffer);
+      let binary = '';
+      for (let i = 0; i < bytes.byteLength; i++) {
+        binary += String.fromCharCode(bytes[i]);
+      }
+      return btoa(binary);
+    }
+
+    function showStatus(message, type) {
+      status.textContent = message;
+      status.className = 'status ' + type;
+      status.style.display = 'block';
+    }
+
+    function showBreakdownDetail(type) {
+      const detail = document.getElementById('breakdownDetail');
+      const descriptions = {
+        pronunciation: 'How accurately you pronounced each word. Click on highlighted words in your transcript to see which sounds need work.',
+        fluency: 'How smoothly you spoke without pauses, hesitations, or filler words. Lower scores indicate frequent pauses or fillers.',
+        structure: 'How well organized your response was. Good structure includes a clear beginning, middle, and end.',
+        clarity: 'How clear and easy to understand your message was. This considers word choice and sentence construction.'
+      };
+      detail.innerHTML = descriptions[type] || '';
+      detail.classList.add('show');
+    }
+
+    function getScoreClass(score) {
+      if (score >= 80) return 'good';
+      if (score >= 60) return 'medium';
+      return 'low';
+    }
+
+    function updateScoreBreakdown(data) {
+      const pronunciation = data.pronunciation?.overallScore || data.pronunciationScore || 75;
+      const fluency = data.pronunciation?.fluencyScore || data.fluencyScore || 70;
+      const structure = data.communication?.structure?.score || 75;
+      const clarity = data.communication?.clarity?.score || 75;
+
+      // Update scores
+      document.getElementById('pronunciationScore').textContent = Math.round(pronunciation);
+      document.getElementById('pronunciationScore').className = 'breakdown-score ' + getScoreClass(pronunciation);
+      document.getElementById('pronunciationBar').style.width = pronunciation + '%';
+      document.getElementById('pronunciationBar').className = 'breakdown-fill ' + getScoreClass(pronunciation);
+
+      document.getElementById('fluencyScore').textContent = Math.round(fluency);
+      document.getElementById('fluencyScore').className = 'breakdown-score ' + getScoreClass(fluency);
+      document.getElementById('fluencyBar').style.width = fluency + '%';
+      document.getElementById('fluencyBar').className = 'breakdown-fill ' + getScoreClass(fluency);
+
+      document.getElementById('structureScore').textContent = Math.round(structure);
+      document.getElementById('structureScore').className = 'breakdown-score ' + getScoreClass(structure);
+      document.getElementById('structureBar').style.width = structure + '%';
+      document.getElementById('structureBar').className = 'breakdown-fill ' + getScoreClass(structure);
+
+      document.getElementById('clarityScore').textContent = Math.round(clarity);
+      document.getElementById('clarityScore').className = 'breakdown-score ' + getScoreClass(clarity);
+      document.getElementById('clarityBar').style.width = clarity + '%';
+      document.getElementById('clarityBar').className = 'breakdown-fill ' + getScoreClass(clarity);
+    }
+
+    function renderTranscriptWithErrors(transcript, words) {
+      if (!transcript) return 'No speech detected';
+      if (!words || words.length === 0) return highlightTranscript(transcript, []);
+
+      // Create transcript with clickable error words
+      let html = transcript;
+
+      // Highlight mispronounced words with tooltips
+      words.forEach(w => {
+        if (w.accuracy < 70) {
+          const wordRegex = new RegExp(`\\b(${w.word})\\b`, 'gi');
+          html = html.replace(wordRegex,
+            `<span class="transcript-word error">$1<span class="word-tooltip">Accuracy: ${Math.round(w.accuracy)}%</span></span>`
+          );
+        }
+      });
+
+      // Highlight fillers
+      FILLER_WORDS.forEach(filler => {
+        const regex = new RegExp(`\\b(${filler})\\b`, 'gi');
+        html = html.replace(regex, '<span class="filler">$1</span>');
+      });
+
+      return html;
+    }
+
+    /**
+     * Compare transcript with reference text and generate diff view
+     * Returns object with: diffHtml, accuracy, missed, wrong, extra
+     */
+    function compareWithReference(transcript, reference, pronunciationWords) {
+      if (!transcript || !reference) {
+        return { diffHtml: transcript || 'No speech detected', accuracy: 0, missed: [], wrong: [], extra: [] };
+      }
+
+      // Normalize words for comparison
+      const normalize = (text) => text.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(w => w.length > 0);
+
+      const refWords = normalize(reference);
+      const transWords = normalize(transcript);
+      const transWordsOriginal = transcript.split(/\s+/).filter(w => w.length > 0);
+
+      // Create pronunciation accuracy map
+      const pronAccuracy = {};
+      if (pronunciationWords) {
+        pronunciationWords.forEach(w => {
+          const key = w.word.toLowerCase();
+          if (!pronAccuracy[key] || pronAccuracy[key] > w.accuracy) {
+            pronAccuracy[key] = w.accuracy;
+          }
+        });
+      }
+
+      // Find longest common subsequence for alignment
+      const lcs = (a, b) => {
+        const m = a.length, n = b.length;
+        const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+        for (let i = 1; i <= m; i++) {
+          for (let j = 1; j <= n; j++) {
+            if (a[i-1] === b[j-1]) dp[i][j] = dp[i-1][j-1] + 1;
+            else dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1]);
+          }
+        }
+        return dp[m][n];
+      };
+
+      // Simple word-by-word comparison with fuzzy matching
+      const missed = []; // Words in reference not in transcript
+      const wrong = [];  // Words that were said differently
+      const extra = [];  // Words in transcript not in reference
+      const matched = new Set();
+
+      // Build a map of reference words
+      const refWordSet = new Set(refWords);
+      const transWordSet = new Set(transWords);
+
+      // Find missed words (in reference but not transcript)
+      refWords.forEach(word => {
+        if (!transWordSet.has(word)) {
+          missed.push(word);
+        }
+      });
+
+      // Find extra words (in transcript but not reference)
+      transWords.forEach((word, idx) => {
+        if (!refWordSet.has(word)) {
+          extra.push(transWordsOriginal[idx] || word);
+        }
+      });
+
+      // Calculate reading accuracy (percentage of reference words correctly read)
+      const correctWords = refWords.filter(w => transWordSet.has(w)).length;
+      const accuracy = refWords.length > 0 ? Math.round((correctWords / refWords.length) * 100) : 0;
+
+      // Generate highlighted HTML showing the reference with highlights
+      let refHtml = '';
+      const refWordsOriginal = reference.split(/\s+/).filter(w => w.length > 0);
+
+      refWordsOriginal.forEach((word, idx) => {
+        const cleanWord = word.toLowerCase().replace(/[^\w]/g, '');
+        const isInTranscript = transWordSet.has(cleanWord);
+        const pronScore = pronAccuracy[cleanWord];
+
+        if (!isInTranscript) {
+          // Missed word - wasn't read at all
+          refHtml += `<span class="diff-missed" title="Not read">${word}</span> `;
+        } else if (pronScore !== undefined && pronScore < 70) {
+          // Word was read but mispronounced
+          refHtml += `<span class="diff-mispronounced" title="Pronunciation: ${Math.round(pronScore)}%">${word}</span> `;
+        } else {
+          // Correct
+          refHtml += `<span class="diff-correct">${word}</span> `;
+        }
+      });
+
+      // Generate transcript HTML with extra words highlighted
+      let transHtml = '';
+      transWordsOriginal.forEach((word, idx) => {
+        const cleanWord = word.toLowerCase().replace(/[^\w]/g, '');
+        const isInRef = refWordSet.has(cleanWord);
+        const pronScore = pronAccuracy[cleanWord];
+
+        if (!isInRef) {
+          // Extra word - not in reference
+          transHtml += `<span class="diff-extra" title="Not in original text">${word}</span> `;
+        } else if (pronScore !== undefined && pronScore < 70) {
+          // Word was in reference but mispronounced
+          transHtml += `<span class="diff-mispronounced" title="Pronunciation: ${Math.round(pronScore)}%">${word}</span> `;
+        } else {
+          transHtml += `<span class="diff-correct">${word}</span> `;
+        }
+      });
+
+      return {
+        refHtml: refHtml.trim(),
+        transHtml: transHtml.trim(),
+        accuracy,
+        missed: [...new Set(missed)],
+        wrong,
+        extra: [...new Set(extra)]
+      };
+    }
+
+    function showStreamingResults(data) {
+      status.style.display = 'none';
+      results.classList.add('show');
+
+      // Hide live feedback panels
+      document.getElementById('liveMetrics').classList.remove('active');
+      document.getElementById('liveTranscript').classList.remove('active');
+
+      const { transcript, communication, wordCount, wpm, fillerCount, duration } = data;
+      const score = communication?.structure?.score || 75;
+
+      document.getElementById('scoreBadge').textContent = Math.round(score);
+      document.getElementById('scoreBadge').className = 'score-badge ' + getScoreClass(score);
+      document.getElementById('scoreLabel').textContent = score >= 80 ? 'Excellent!' : score >= 60 ? 'Good job!' : 'Keep practicing!';
+
+      document.getElementById('wordCount').textContent = wordCount || 0;
+      document.getElementById('wpm').textContent = wpm || 0;
+      document.getElementById('fillers').textContent = fillerCount || localFillerCount || 0;
+
+      // Render transcript with error highlighting
+      document.getElementById('transcript').innerHTML = renderTranscriptWithErrors(transcript, wordsWithScores);
+
+      // Update score breakdown
+      updateScoreBreakdown(data);
+
+      // Coaching tips as bullet points
+      const coachingTipsList = document.getElementById('coachingTips');
+      coachingTipsList.innerHTML = '';
+      const tips = communication?.coachingTip ? communication.coachingTip.split(/[.!?]+/).filter(t => t.trim()) : ['Keep practicing to improve!'];
+      tips.forEach(tip => {
+        if (tip.trim()) {
+          const li = document.createElement('li');
+          li.textContent = tip.trim();
+          coachingTipsList.appendChild(li);
+        }
+      });
+
+      document.getElementById('polished').textContent = communication?.polishedVersion || 'N/A';
+
+      // Strengths
+      const strengthsList = document.getElementById('strengths');
+      strengthsList.innerHTML = '';
+      (communication?.strengths || ['Good effort!']).forEach(s => {
+        const li = document.createElement('li');
+        li.textContent = s;
+        strengthsList.appendChild(li);
+      });
+
+      // Areas to improve
+      const improvementsList = document.getElementById('improvements');
+      improvementsList.innerHTML = '';
+      const improvements = communication?.areasToImprove || communication?.improvements || [];
+      if (improvements.length === 0) {
+        // Generate from filler count and word scores
+        if (fillerCount > 2) {
+          improvements.push('Reduce filler words (um, uh, like) for more polished delivery');
+        }
+        if (wordsWithScores.some(w => w.accuracy < 60)) {
+          improvements.push('Practice pronunciation of highlighted words');
+        }
+        if (wpm < 100) {
+          improvements.push('Try speaking at a slightly faster pace for more energy');
+        } else if (wpm > 160) {
+          improvements.push('Slow down slightly for better clarity');
+        }
+        if (improvements.length === 0) {
+          improvements.push('Continue practicing to maintain your skills');
+        }
+      }
+      improvements.forEach(s => {
+        const li = document.createElement('li');
+        li.textContent = s;
+        improvementsList.appendChild(li);
+      });
+    }
+
+    function showResults(data) {
+      status.style.display = 'none';
+      results.classList.add('show');
+
+      // Hide live feedback panels
+      document.getElementById('liveMetrics').classList.remove('active');
+      document.getElementById('liveTranscript').classList.remove('active');
+
+      const { pronunciation, communication } = data;
+      const score = communication?.structure?.score || pronunciation?.overallScore || 0;
+
+      document.getElementById('scoreBadge').textContent = Math.round(score);
+      document.getElementById('scoreBadge').className = 'score-badge ' + getScoreClass(score);
+      document.getElementById('scoreLabel').textContent = score >= 80 ? 'Excellent!' : score >= 60 ? 'Good job!' : 'Keep practicing!';
+
+      const words = pronunciation?.words?.length || 0;
+      const durationSecs = (Date.now() - startTime) / 1000;
+      document.getElementById('wordCount').textContent = words;
+      document.getElementById('wpm').textContent = Math.round(words / (durationSecs / 60)) || 0;
+      document.getElementById('fillers').textContent = communication?.fillerWords?.total || 0;
+
+      // Render transcript with error highlighting
+      const wordScores = pronunciation?.words?.map(w => ({ word: w.word, accuracy: w.accuracyScore })) || [];
+      document.getElementById('transcript').innerHTML = renderTranscriptWithErrors(pronunciation?.transcript, wordScores);
+
+      // Update score breakdown
+      updateScoreBreakdown({ pronunciation, communication });
+
+      // Coaching tips as bullet points
+      const coachingTipsList = document.getElementById('coachingTips');
+      coachingTipsList.innerHTML = '';
+      const tips = communication?.coachingTip ? communication.coachingTip.split(/[.!?]+/).filter(t => t.trim()) : ['Keep practicing to improve!'];
+      tips.forEach(tip => {
+        if (tip.trim()) {
+          const li = document.createElement('li');
+          li.textContent = tip.trim();
+          coachingTipsList.appendChild(li);
+        }
+      });
+
+      document.getElementById('polished').textContent = communication?.polishedVersion || 'N/A';
+
+      // Strengths
+      const strengthsList = document.getElementById('strengths');
+      strengthsList.innerHTML = '';
+      (communication?.strengths || []).forEach(s => {
+        const li = document.createElement('li');
+        li.textContent = s;
+        strengthsList.appendChild(li);
+      });
+
+      // Areas to improve
+      const improvementsList = document.getElementById('improvements');
+      improvementsList.innerHTML = '';
+      const improvements = communication?.areasToImprove || [];
+      if (improvements.length === 0 && pronunciation?.problemSounds?.length > 0) {
+        improvements.push(`Work on these sounds: ${pronunciation.problemSounds.join(', ')}`);
+      }
+      improvements.forEach(s => {
+        const li = document.createElement('li');
+        li.textContent = s;
+        improvementsList.appendChild(li);
+      });
+    }
+
+    // Initialize
+    initPromptCards();
+
+    // ========== News / Listen & Read Functions ==========
+    let newsArticles = [];
+    let currentArticle = null;
+    let audioElement = null;
+    let wordBoundaries = [];
+    let currentWordIndex = -1;
+    let audioUpdateInterval = null;
+    let currentCarouselIndex = 0;
+
+    // Fetch news on load
+    async function loadNews() {
+      try {
+        const response = await fetch('/api/news');
+        const data = await response.json();
+        if (data.success && data.data.articles) {
+          newsArticles = data.data.articles;
+          renderDigestAndCarousel();
+        } else {
+          showNewsError();
+        }
+      } catch (error) {
+        console.error('Failed to load news:', error);
+        showNewsError();
+      }
+    }
+
+    function showNewsError() {
+      document.getElementById('newsLoading').style.display = 'none';
+      document.getElementById('digestContent').textContent = 'Failed to load news. Try refreshing.';
+      document.getElementById('newsCount').textContent = '0';
+    }
+
+    async function refreshNews() {
+      const btn = document.getElementById('refreshNewsBtn');
+      btn.disabled = true;
+      btn.textContent = 'Refreshing...';
+      document.getElementById('newsLoading').style.display = 'block';
+      document.getElementById('newsCarouselContainer').style.display = 'none';
+      document.getElementById('digestContent').textContent = 'Fetching fresh news...';
+
+      try {
+        const response = await fetch('/api/news/refresh', { method: 'POST' });
+        const data = await response.json();
+        if (data.success && data.data.articles) {
+          newsArticles = data.data.articles;
+          renderDigestAndCarousel();
+        }
+      } catch (error) {
+        console.error('Failed to refresh news:', error);
+        showNewsError();
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Refresh';
+      }
+    }
+
+    function renderDigestAndCarousel() {
+      document.getElementById('newsLoading').style.display = 'none';
+
+      if (newsArticles.length === 0) {
+        showNewsError();
+        return;
+      }
+
+      // Update digest summary
+      document.getElementById('newsCount').textContent = newsArticles.length;
+
+      // Create digest from top headlines
+      const topHeadlines = newsArticles.slice(0, 5).map(a => a.title);
+      const digestText = `Today's highlights: ${topHeadlines.join(' • ')}. Scroll through ${newsArticles.length} stories below to listen or practice reading aloud.`;
+      document.getElementById('digestContent').textContent = digestText;
+
+      // Render carousel
+      const carousel = document.getElementById('newsCarousel');
+      carousel.innerHTML = newsArticles.map(article => `
+        <div class="news-card">
+          <div class="news-card-header">
+            <span class="news-category ${article.category}">${article.category}</span>
+            <span class="news-time">${formatTimeAgo(article.publishedAt)}</span>
+          </div>
+          <h3 class="news-title">${article.title}</h3>
+          <p class="news-summary">${article.summary}</p>
+          <div class="news-actions">
+            <button class="news-action-btn listen-btn" onclick="openListen('${article.id}')">
+              <span>🎧</span> Listen
+            </button>
+            <button class="news-action-btn read-btn" onclick="openRead('${article.id}')">
+              <span>📖</span> Read Aloud
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      // Render dots
+      const dotsContainer = document.getElementById('carouselDots');
+      dotsContainer.innerHTML = newsArticles.map((_, idx) =>
+        `<div class="carousel-dot ${idx === 0 ? 'active' : ''}" onclick="goToSlide(${idx})"></div>`
+      ).join('');
+
+      document.getElementById('newsCarouselContainer').style.display = 'block';
+      currentCarouselIndex = 0;
+      updateCarouselPosition();
+    }
+
+    function scrollCarousel(direction) {
+      const newIndex = currentCarouselIndex + direction;
+      if (newIndex >= 0 && newIndex < newsArticles.length) {
+        currentCarouselIndex = newIndex;
+        updateCarouselPosition();
+      }
+    }
+
+    function goToSlide(index) {
+      currentCarouselIndex = index;
+      updateCarouselPosition();
+    }
+
+    function updateCarouselPosition() {
+      const carousel = document.getElementById('newsCarousel');
+      const cardWidth = 320 + 16; // card width + gap
+      carousel.scrollLeft = currentCarouselIndex * cardWidth;
+
+      // Update dots
+      document.querySelectorAll('.carousel-dot').forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === currentCarouselIndex);
+      });
+    }
+
+    function formatTimeAgo(dateStr) {
+      const date = new Date(dateStr);
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+
+      if (diffMins < 60) return `${diffMins}m ago`;
+      if (diffHours < 24) return `${diffHours}h ago`;
+      return date.toLocaleDateString();
+    }
+
+    // ========== Listen Mode ==========
+    async function openListen(articleId) {
+      currentArticle = newsArticles.find(a => a.id === articleId);
+      if (!currentArticle) return;
+
+      document.getElementById('homeView').classList.add('hidden');
+      document.getElementById('listenView').classList.add('active');
+
+      document.getElementById('listenTitle').textContent = currentArticle.title;
+      document.getElementById('listenSource').textContent = `${currentArticle.source} • ~1 min read`;
+
+      // Show loading state for text
+      document.getElementById('listenText').innerHTML = '<span style="color: #64748B;">Loading audio...</span>';
+
+      // Fetch audio and word boundaries
+      try {
+        // Fetch boundaries first
+        const boundariesRes = await fetch(`/api/news/${articleId}/boundaries`);
+        const boundariesData = await boundariesRes.json();
+        if (boundariesData.success) {
+          wordBoundaries = boundariesData.data.boundaries || [];
+        }
+
+        // Setup audio
+        if (audioElement) {
+          audioElement.pause();
+          audioElement = null;
+        }
+        audioElement = new Audio(`/api/news/${articleId}/audio`);
+        audioElement.addEventListener('loadedmetadata', () => {
+          document.getElementById('audioDuration').textContent = formatTime(audioElement.duration);
+        });
+        audioElement.addEventListener('timeupdate', updateAudioProgress);
+        audioElement.addEventListener('ended', onAudioEnded);
+
+        // Render text with word spans
+        renderListenText(currentArticle.summary);
+
+      } catch (error) {
+        console.error('Failed to load audio:', error);
+        document.getElementById('listenText').innerHTML = currentArticle.summary;
+      }
+    }
+
+    function renderListenText(text) {
+      const words = text.split(/\s+/);
+      const html = words.map((word, idx) => `<span class="word" data-index="${idx}">${word}</span>`).join(' ');
+      document.getElementById('listenText').innerHTML = html;
+    }
+
+    function togglePlayback() {
+      if (!audioElement) return;
+
+      const btn = document.getElementById('playBtn');
+      if (audioElement.paused) {
+        audioElement.play();
+        btn.textContent = '⏸️';
+        startWordSync();
+      } else {
+        audioElement.pause();
+        btn.textContent = '▶️';
+        stopWordSync();
+      }
+    }
+
+    function updateAudioProgress() {
+      if (!audioElement) return;
+      const progress = (audioElement.currentTime / audioElement.duration) * 100;
+      document.getElementById('audioProgressFill').style.width = `${progress}%`;
+      document.getElementById('audioCurrentTime').textContent = formatTime(audioElement.currentTime);
+    }
+
+    function seekAudio(event) {
+      if (!audioElement) return;
+      const rect = event.target.getBoundingClientRect();
+      const percent = (event.clientX - rect.left) / rect.width;
+      audioElement.currentTime = percent * audioElement.duration;
+    }
+
+    function rewindAudio() {
+      if (audioElement) audioElement.currentTime = Math.max(0, audioElement.currentTime - 5);
+    }
+
+    function forwardAudio() {
+      if (audioElement) audioElement.currentTime = Math.min(audioElement.duration, audioElement.currentTime + 5);
+    }
+
+    function onAudioEnded() {
+      document.getElementById('playBtn').textContent = '▶️';
+      stopWordSync();
+      // Reset word highlighting
+      document.querySelectorAll('#listenText .word').forEach(el => {
+        el.classList.remove('active', 'spoken');
+      });
+      currentWordIndex = -1;
+    }
+
+    function startWordSync() {
+      if (audioUpdateInterval) clearInterval(audioUpdateInterval);
+      audioUpdateInterval = setInterval(syncWords, 50);
+    }
+
+    function stopWordSync() {
+      if (audioUpdateInterval) {
+        clearInterval(audioUpdateInterval);
+        audioUpdateInterval = null;
+      }
+    }
+
+    function syncWords() {
+      if (!audioElement || !wordBoundaries.length) return;
+
+      const currentMs = audioElement.currentTime * 1000;
+      const wordEls = document.querySelectorAll('#listenText .word');
+
+      // Find current word based on boundaries
+      let activeIndex = -1;
+      for (let i = 0; i < wordBoundaries.length && i < wordEls.length; i++) {
+        const boundary = wordBoundaries[i];
+        if (currentMs >= boundary.startMs && currentMs <= boundary.endMs) {
+          activeIndex = i;
+          break;
+        } else if (currentMs > boundary.endMs) {
+          activeIndex = i; // Keep track of last spoken word
+        }
+      }
+
+      if (activeIndex !== currentWordIndex) {
+        wordEls.forEach((el, idx) => {
+          el.classList.remove('active');
+          if (idx < activeIndex) {
+            el.classList.add('spoken');
+          } else if (idx === activeIndex) {
+            el.classList.add('active');
+            el.classList.remove('spoken');
+          } else {
+            el.classList.remove('spoken');
+          }
+        });
+        currentWordIndex = activeIndex;
+      }
+    }
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function goHomeFromListen() {
+      document.getElementById('listenView').classList.remove('active');
+      document.getElementById('homeView').classList.remove('hidden');
+
+      if (audioElement) {
+        audioElement.pause();
+        audioElement = null;
+      }
+      stopWordSync();
+      currentArticle = null;
+      wordBoundaries = [];
+      currentWordIndex = -1;
+    }
+
+    // ========== Read Practice Mode ==========
+    let isReadRecording = false;
+    let readStartTime;
+    let readTimerInterval;
+    let readSocket = null;
+    let readSessionId = null;
+    let readFinalTranscript = '';
+    let readInterimTranscript = '';
+    let readWordsWithScores = [];
+    let readAudioContext;
+    let readMediaStream;
+    let readProcessor;
+    let readAudioChunks = [];
+
+    function openRead(articleId) {
+      currentArticle = newsArticles.find(a => a.id === articleId);
+      if (!currentArticle) return;
+
+      document.getElementById('homeView').classList.add('hidden');
+      document.getElementById('readView').classList.add('active');
+
+      // Set reference text
+      document.getElementById('readReferenceText').textContent = currentArticle.summary;
+
+      // Reset state
+      resetReadState();
+    }
+
+    function startReadPractice() {
+      // From listen view, switch to read view with same article
+      document.getElementById('listenView').classList.remove('active');
+      document.getElementById('readView').classList.add('active');
+
+      if (audioElement) {
+        audioElement.pause();
+        audioElement = null;
+      }
+      stopWordSync();
+
+      document.getElementById('readReferenceText').textContent = currentArticle.summary;
+      resetReadState();
+    }
+
+    function resetReadState() {
+      isReadRecording = false;
+      readFinalTranscript = '';
+      readInterimTranscript = '';
+      readWordsWithScores = [];
+
+      document.getElementById('readLiveMetrics').classList.remove('active');
+      document.getElementById('readLiveTranscript').classList.remove('active');
+      document.getElementById('readResults').classList.remove('show');
+      document.getElementById('readStatus').style.display = 'none';
+      document.getElementById('readTimer').textContent = '0:00';
+      document.getElementById('readLiveTimer').textContent = '0:00';
+      document.getElementById('readLiveWords').textContent = '0';
+      document.getElementById('readLiveWpm').textContent = '0';
+      document.getElementById('readLiveAccuracy').textContent = '--%';
+      document.getElementById('readLiveIssues').textContent = '0';
+      document.getElementById('readLiveIssues').classList.add('good');
+      document.getElementById('pronunciationFeedback').style.display = 'none';
+      document.getElementById('feedbackWords').innerHTML = '';
+      document.getElementById('readLiveTranscriptText').textContent = 'Start reading to see your words appear here...';
+      document.getElementById('readRecordBtn').classList.remove('recording');
+      document.getElementById('readHint').textContent = 'Tap to start reading';
+    }
+
+    async function toggleReadRecording() {
+      if (!isReadRecording) {
+        await startReadRecording();
+      } else {
+        stopReadRecording(true);
+      }
+    }
+
+    async function startReadRecording() {
+      try {
+        readMediaStream = await navigator.mediaDevices.getUserMedia({
+          audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true }
+        });
+
+        readAudioContext = new AudioContext();
+        const actualSampleRate = readAudioContext.sampleRate;
+        const source = readAudioContext.createMediaStreamSource(readMediaStream);
+        readProcessor = readAudioContext.createScriptProcessor(4096, 1, 1);
+        readAudioChunks = [];
+
+        // Init socket for read mode
+        initReadSocket();
+
+        readProcessor.onaudioprocess = (e) => {
+          if (isReadRecording) {
+            const inputData = e.inputBuffer.getChannelData(0);
+            let pcmData;
+            if (actualSampleRate !== SAMPLE_RATE) {
+              const ratio = actualSampleRate / SAMPLE_RATE;
+              const newLength = Math.round(inputData.length / ratio);
+              pcmData = new Int16Array(newLength);
+              for (let i = 0; i < newLength; i++) {
+                const srcIndex = Math.min(Math.floor(i * ratio), inputData.length - 1);
+                const s = Math.max(-1, Math.min(1, inputData[srcIndex]));
+                pcmData[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+              }
+            } else {
+              pcmData = new Int16Array(inputData.length);
+              for (let i = 0; i < inputData.length; i++) {
+                const s = Math.max(-1, Math.min(1, inputData[i]));
+                pcmData[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+              }
+            }
+            readAudioChunks.push(pcmData);
+            if (readSocket && readSocket.connected && readSessionId) {
+              readSocket.emit('audio:chunk', pcmData.buffer.slice(0));
+            }
+          }
+        };
+
+        source.connect(readProcessor);
+        readProcessor.connect(readAudioContext.destination);
+
+        isReadRecording = true;
+        readStartTime = Date.now();
+        document.getElementById('readRecordBtn').classList.add('recording');
+        document.getElementById('readHint').textContent = 'Tap to stop';
+        document.getElementById('readLiveMetrics').classList.add('active');
+        document.getElementById('readLiveTranscript').classList.add('active');
+
+        readTimerInterval = setInterval(updateReadTimer, 100);
+        setTimeout(() => { if (isReadRecording) stopReadRecording(true); }, 60000);
+
+      } catch (err) {
+        showReadStatus('Microphone access denied: ' + err.message, 'error');
+      }
+    }
+
+    function initReadSocket() {
+      if (readSocket) readSocket.disconnect();
+
+      readSocket = io();
+
+      readSocket.on('connect', () => {
+        readSocket.emit('session:start', {
+          mode: 'read_practice',
+          promptText: currentArticle.summary,
+          referenceText: currentArticle.summary,
+        });
+      });
+
+      readSocket.on('session:started', (data) => {
+        readSessionId = data.timestamp;
+      });
+
+      readSocket.on('session:update', (data) => {
+        updateReadLiveFeedback(data);
+      });
+
+      readSocket.on('session:analyzing', (data) => {
+        showReadStatus(data.message || 'Analyzing...', 'analyzing');
+      });
+
+      readSocket.on('session:complete', (data) => {
+        if (data.transcript && !data.error) {
+          showReadResults(data);
+        } else {
+          showReadStatus(data.error || 'No speech detected', 'error');
+        }
+      });
+
+      readSocket.on('session:error', (data) => {
+        showReadStatus(data.message || 'An error occurred', 'error');
+      });
+    }
+
+    function updateReadTimer() {
+      const elapsed = Math.floor((Date.now() - readStartTime) / 1000);
+      const mins = Math.floor(elapsed / 60);
+      const secs = elapsed % 60;
+      const timeStr = `${mins}:${secs.toString().padStart(2, '0')}`;
+      document.getElementById('readTimer').textContent = timeStr;
+      document.getElementById('readLiveTimer').textContent = timeStr;
+    }
+
+    function updateReadLiveFeedback(data) {
+      if (data.wordCount !== undefined) {
+        document.getElementById('readLiveWords').textContent = data.wordCount;
+      }
+      if (data.wpm !== undefined) {
+        document.getElementById('readLiveWpm').textContent = data.wpm;
+      }
+
+      // Use allWords for accumulated scores
+      if (data.allWords && data.allWords.length > 0) {
+        readWordsWithScores = data.allWords;
+        // Calculate average accuracy
+        const avgAccuracy = Math.round(data.allWords.reduce((sum, w) => sum + (w.accuracy || 100), 0) / data.allWords.length);
+        document.getElementById('readLiveAccuracy').textContent = avgAccuracy + '%';
+      } else if (data.words) {
+        // Fallback to words from current result
+        readWordsWithScores = data.words;
+        const avgAccuracy = data.words.length > 0
+          ? Math.round(data.words.reduce((sum, w) => sum + (w.accuracy || 100), 0) / data.words.length)
+          : 0;
+        document.getElementById('readLiveAccuracy').textContent = avgAccuracy + '%';
+      }
+
+      // Update pronunciation issues count
+      if (data.mispronouncedCount !== undefined) {
+        const issuesEl = document.getElementById('readLiveIssues');
+        issuesEl.textContent = data.mispronouncedCount;
+        issuesEl.classList.toggle('good', data.mispronouncedCount === 0);
+      }
+
+      // Show real-time pronunciation feedback
+      if (data.mispronouncedWords && data.mispronouncedWords.length > 0) {
+        const feedbackPanel = document.getElementById('pronunciationFeedback');
+        const feedbackWords = document.getElementById('feedbackWords');
+
+        // Get unique words with low accuracy
+        const uniqueIssues = [...new Set(data.mispronouncedWords)].slice(-5);
+
+        if (uniqueIssues.length > 0) {
+          feedbackPanel.style.display = 'block';
+          feedbackWords.innerHTML = uniqueIssues.map(word => {
+            const wordData = readWordsWithScores.find(w => w.word === word);
+            const accuracy = wordData ? Math.round(wordData.accuracy) : '?';
+            return `<span class="feedback-word">${word}<span class="accuracy">${accuracy}%</span></span>`;
+          }).join('');
+        }
+      }
+
+      if (data.type === 'final' && data.transcript) {
+        readFinalTranscript = data.transcript;
+      } else if (data.type === 'interim' && data.transcript) {
+        readInterimTranscript = data.transcript;
+      }
+
+      updateReadTranscriptDisplay();
+    }
+
+    function updateReadTranscriptDisplay() {
+      const el = document.getElementById('readLiveTranscriptText');
+      let html = highlightTranscript(readFinalTranscript, readWordsWithScores);
+      if (readInterimTranscript) {
+        html += `<span class="interim"> ${readInterimTranscript}</span>`;
+      }
+      if (!html.trim()) {
+        html = 'Start reading to see your words appear here...';
+      }
+      el.innerHTML = html;
+    }
+
+    function stopReadRecording(shouldAnalyze = true) {
+      if (isReadRecording) {
+        isReadRecording = false;
+        clearInterval(readTimerInterval);
+        document.getElementById('readRecordBtn').classList.remove('recording');
+        document.getElementById('readHint').textContent = 'Tap to start reading';
+
+        if (readProcessor) readProcessor.disconnect();
+        if (readMediaStream) readMediaStream.getTracks().forEach(t => t.stop());
+        if (readAudioContext && readAudioContext.state !== 'closed') readAudioContext.close();
+
+        if (shouldAnalyze && readSocket && readSocket.connected && readSessionId) {
+          showReadStatus('Analyzing your reading...', 'analyzing');
+          readSocket.emit('session:stop');
+        }
+      }
+    }
+
+    function showReadStatus(message, type) {
+      const status = document.getElementById('readStatus');
+      status.textContent = message;
+      status.className = 'status ' + type;
+      status.style.display = 'block';
+    }
+
+    function showReadResults(data) {
+      document.getElementById('readStatus').style.display = 'none';
+      document.getElementById('readLiveMetrics').classList.remove('active');
+      document.getElementById('readLiveTranscript').classList.remove('active');
+      document.getElementById('pronunciationFeedback').style.display = 'none';
+
+      const resultsEl = document.getElementById('readResults');
+      resultsEl.classList.add('show');
+
+      const { transcript, communication, wordCount, wpm, pronunciation, allWords } = data;
+      const pronScore = pronunciation?.overallScore || pronunciation?.wordAccuracy || 75;
+      const wordsToUse = allWords || readWordsWithScores;
+      const mispronouncedCount = pronunciation?.mispronouncedCount || 0;
+
+      // Compare transcript with reference text
+      const referenceText = currentArticle?.summary || '';
+      const comparison = compareWithReference(transcript, referenceText, wordsToUse);
+
+      // Use reading accuracy (how many reference words were read) as the main score
+      const readingAccuracy = comparison.accuracy;
+      // Combined score: average of reading accuracy and pronunciation
+      const combinedScore = Math.round((readingAccuracy + pronScore) / 2);
+
+      // Count total issues: missed + mispronounced + extra
+      const totalIssues = comparison.missed.length + mispronouncedCount + comparison.extra.length;
+
+      // Build mispronounced words section
+      let wordsToImproveSection = '';
+      const hasIssues = (pronunciation?.mispronouncedWords?.length > 0) ||
+                        (comparison.missed.length > 0) ||
+                        (comparison.extra.length > 0);
+
+      if (hasIssues) {
+        let wordCards = '';
+
+        // Add mispronounced words
+        if (pronunciation?.mispronouncedWords && pronunciation.mispronouncedWords.length > 0) {
+          const uniqueMispronounced = [...new Map(pronunciation.mispronouncedWords.map(w => [w.word, w])).values()].slice(0, 5);
+          wordCards += uniqueMispronounced.map(w => `
+            <div class="mispronounced-word-card">
+              <span class="word">${w.word}</span>
+              <span class="accuracy-badge medium" title="Pronunciation accuracy">${Math.round(w.accuracy)}%</span>
+            </div>
+          `).join('');
+        }
+
+        // Add missed words (limit to 5)
+        if (comparison.missed.length > 0) {
+          wordCards += comparison.missed.slice(0, 5).map(word => `
+            <div class="mispronounced-word-card missed">
+              <span class="word">${word}</span>
+              <span class="accuracy-badge low" title="Not read">Skipped</span>
+            </div>
+          `).join('');
+        }
+
+        wordsToImproveSection = `
+          <div class="section">
+            <div class="section-title">Words to Practice</div>
+            <div class="mispronounced-words-grid">
+              ${wordCards}
+            </div>
+          </div>
+        `;
+      }
+
+      // Build comparison section showing reference vs transcript
+      let comparisonSection = '';
+      if (referenceText && transcript) {
+        comparisonSection = `
+          <div class="section">
+            <div class="section-title">Reading Comparison</div>
+            <div class="diff-legend">
+              <span class="diff-legend-item"><span class="diff-correct-dot"></span> Correct</span>
+              <span class="diff-legend-item"><span class="diff-missed-dot"></span> Missed</span>
+              <span class="diff-legend-item"><span class="diff-mispronounced-dot"></span> Mispronounced</span>
+              <span class="diff-legend-item"><span class="diff-extra-dot"></span> Extra</span>
+            </div>
+            <div class="comparison-box">
+              <div class="comparison-label">Original Text</div>
+              <div class="comparison-text">${comparison.refHtml}</div>
+            </div>
+            <div class="comparison-box" style="margin-top: 12px;">
+              <div class="comparison-label">Your Reading</div>
+              <div class="comparison-text">${comparison.transHtml}</div>
+            </div>
+          </div>
+        `;
+      }
+
+      resultsEl.innerHTML = `
+        <div class="score-card">
+          <div class="score-header">
+            <div class="score-badge ${getScoreClass(combinedScore)}">${Math.round(combinedScore)}</div>
+            <div class="score-info">
+              <div class="score-label">${combinedScore >= 80 ? 'Excellent reading!' : combinedScore >= 60 ? 'Good effort!' : 'Keep practicing!'}</div>
+            </div>
+          </div>
+          <div class="metrics-grid">
+            <div class="metric">
+              <div class="metric-value">${wordCount || 0}</div>
+              <div class="metric-label">Words Read</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">${wpm || 0}</div>
+              <div class="metric-label">WPM</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">${readingAccuracy}%</div>
+              <div class="metric-label">Coverage</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">${Math.round(pronScore)}%</div>
+              <div class="metric-label">Clarity</div>
+            </div>
+          </div>
+          <div class="metrics-row" style="margin-top: 12px; display: flex; gap: 16px; justify-content: center; font-size: 13px;">
+            ${comparison.missed.length > 0 ? `<span style="color: #94A3B8;"><strong>${comparison.missed.length}</strong> missed</span>` : ''}
+            ${mispronouncedCount > 0 ? `<span style="color: #FBBF24;"><strong>${mispronouncedCount}</strong> unclear</span>` : ''}
+            ${comparison.extra.length > 0 ? `<span style="color: #60A5FA;"><strong>${comparison.extra.length}</strong> extra</span>` : ''}
+          </div>
+        </div>
+
+        ${wordsToImproveSection}
+
+        ${comparisonSection}
+
+        ${communication?.coachingTip ? `
+        <div class="section">
+          <div class="section-title">Tips for Improvement</div>
+          <ul class="coaching-tips-list">
+            ${communication.coachingTip.split(/[.!?]+/).filter(t => t.trim()).map(tip => `<li>${tip.trim()}</li>`).join('')}
+          </ul>
+        </div>
+        ` : ''}
+
+        <button class="try-again-btn" onclick="resetReadState()">Try Again</button>
+        <button class="try-again-btn" style="background: #64748B; margin-top: 8px;" onclick="goHomeFromRead()">Choose Another Article</button>
+      `;
+    }
+
+    function goHomeFromRead() {
+      document.getElementById('readView').classList.remove('active');
+      document.getElementById('homeView').classList.remove('hidden');
+
+      if (readSocket) {
+        readSocket.disconnect();
+        readSocket = null;
+        readSessionId = null;
+      }
+      currentArticle = null;
+    }
+
+    // Load news on page load
+    loadNews();
+  </script>
+</body>
+</html>
