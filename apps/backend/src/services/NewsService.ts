@@ -189,7 +189,10 @@ Important: Each summary MUST be exactly 140-160 words for optimal 1-minute readi
       logger.info('Fetched and summarized news articles', { count: articles.length });
       return articles;
     } catch (error) {
-      logger.error('Failed to fetch news from OpenAI', { error });
+      logger.error('Failed to fetch news from OpenAI', {
+        message: error instanceof Error ? error.message : String(error),
+        name: error instanceof Error ? error.name : 'Unknown',
+      });
       throw error;
     }
   }

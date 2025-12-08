@@ -90,6 +90,18 @@ async function main() {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
+  // Debug endpoint to check config (remove in production)
+  app.get('/debug/config', (_req, res) => {
+    res.json({
+      hasOpenAIKey: !!env.OPENAI_API_KEY,
+      openAIKeyLength: env.OPENAI_API_KEY?.length || 0,
+      openAIKeyPrefix: env.OPENAI_API_KEY?.substring(0, 10) || 'none',
+      hasAzureKey: !!env.AZURE_SPEECH_KEY,
+      azureRegion: env.AZURE_SPEECH_REGION,
+      model: env.OPENAI_MODEL,
+    });
+  });
+
   // Error handler (must be last)
   app.use(errorHandler);
 
