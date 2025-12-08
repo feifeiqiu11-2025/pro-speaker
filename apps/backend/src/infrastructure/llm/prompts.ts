@@ -53,6 +53,14 @@ For READ ALOUD practice:
 - Note any words that were difficult
 - Comment on pacing and rhythm
 - Less focus on content/structure (they're reading given text)`,
+
+    read_practice: `${basePrompt}
+
+For READ PRACTICE mode:
+- Focus primarily on pronunciation accuracy
+- Note any mispronounced words
+- Comment on clarity and articulation
+- Skip OpenAI analysis - handled by pronunciation scoring`,
   };
 
   return modeSpecificPrompts[mode];

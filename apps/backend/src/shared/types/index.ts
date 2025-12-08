@@ -42,7 +42,7 @@ export interface PaginatedResponse<T> {
 /**
  * Session modes
  */
-export type SessionMode = 'free_talk' | 'professional' | 'casual' | 'read_aloud';
+export type SessionMode = 'free_talk' | 'professional' | 'casual' | 'read_aloud' | 'read_practice';
 
 /**
  * Pronunciation result from Azure Speech
