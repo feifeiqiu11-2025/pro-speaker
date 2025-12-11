@@ -43,14 +43,12 @@ interface NewsServiceConfig {
  */
 export class NewsService {
   private openai: OpenAI;
-  private model: string;
   private cacheDir: string;
   private cacheTTLHours: number;
   private cacheFilePath: string;
 
   constructor(config: NewsServiceConfig) {
     this.openai = new OpenAI({ apiKey: config.openaiApiKey });
-    this.model = config.openaiModel || 'gpt-4o';
     // Use process.cwd() for ESM compatibility - assumes running from apps/backend
     this.cacheDir = config.cacheDir || path.join(process.cwd(), 'data');
     this.cacheTTLHours = config.cacheTTLHours || 24;
@@ -109,60 +107,79 @@ export class NewsService {
   }
 
   /**
-   * Fetch news using OpenAI's capabilities
+   * Fetch news using OpenAI's capabilities with web search
    */
   private async fetchAndSummarizeNews(): Promise<NewsArticle[]> {
-    const systemPrompt = `You are a tech news curator. Your job is to provide the latest AI and technology news summaries.
+    const today = new Date().toISOString().split('T')[0];
 
-For each news item, provide:
-1. A compelling title
+    const userPrompt = `Search for the latest AI and technology news from the LAST 24 HOURS (today is ${today}).
+
+Find 10 real news articles from these sources:
+- Tech news: TechCrunch, The Verge, Wired, Ars Technica, CNET
+- Business/Tech: Bloomberg Technology, Reuters Tech, CNBC Tech
+- Social media announcements: Twitter/X, LinkedIn, YouTube official blogs
+- Big tech companies: OpenAI, Anthropic, Google, Meta, Microsoft, Apple, Amazon, Tesla, NVIDIA
+- AI researchers and influencers on Twitter/X
+
+For EACH news item found, provide:
+1. The actual headline from the source
 2. A summary of exactly 140-160 words (optimized for 1-minute reading at ~150 WPM)
-3. The source name and URL
+3. The real source name and actual URL
 4. Category: ai, tech, startup, or influencer
 
-Focus on:
-- Major AI announcements (OpenAI, Anthropic, Google, Meta)
-- Tech industry news
-- Startup funding and launches
-- Notable AI researcher/influencer statements
-
-Make the summaries engaging and suitable for English language learners to read aloud.
-Use clear, professional language without jargon.`;
-
-    const userPrompt = `Provide 10 of the most important tech and AI news items from today or the past few days.
-
-Return as JSON array with this exact structure:
+Return as JSON with this exact structure:
 {
   "articles": [
     {
-      "title": "Headline",
+      "title": "Actual Headline from Source",
       "summary": "140-160 word summary written for 1-minute read-aloud practice. Clear sentences, good for pronunciation practice.",
-      "source": "Source Name",
-      "sourceUrl": "https://...",
+      "source": "Actual Source Name",
+      "sourceUrl": "https://actual-url.com/article",
       "category": "ai|tech|startup|influencer"
     }
   ]
 }
 
-Important: Each summary MUST be exactly 140-160 words for optimal 1-minute reading time.`;
+IMPORTANT:
+- Only include REAL news from the last 24 hours
+- Use actual URLs that exist
+- Make summaries engaging and suitable for English learners to read aloud
+- Use clear, professional language without jargon`;
 
     try {
-      const response = await this.openai.chat.completions.create({
-        model: this.model,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        response_format: { type: 'json_object' },
-        temperature: 0.7,
+      // Use web search enabled model for real-time news
+      const response = await this.openai.responses.create({
+        model: 'gpt-4o',
+        tools: [{ type: 'web_search_preview' }],
+        input: userPrompt,
       });
 
-      const content = response.choices[0]?.message?.content;
+      // Extract text content from the response
+      let content = '';
+      for (const item of response.output) {
+        if (item.type === 'message') {
+          for (const block of item.content) {
+            if (block.type === 'output_text') {
+              content += block.text;
+            }
+          }
+        }
+      }
+
       if (!content) {
         throw new Error('Empty response from OpenAI');
       }
 
-      const parsed = JSON.parse(content);
+      logger.info('OpenAI web search response received', { contentLength: content.length });
+
+      // Extract JSON from the response (may be wrapped in markdown code blocks)
+      const jsonMatch = content.match(/\{[\s\S]*"articles"[\s\S]*\}/);
+      if (!jsonMatch) {
+        logger.error('No JSON found in OpenAI response', { content: content.substring(0, 500) });
+        throw new Error('No JSON found in response');
+      }
+
+      const parsed = JSON.parse(jsonMatch[0]);
       const articles: NewsArticle[] = (parsed.articles || []).map((article: {
         title: string;
         summary: string;
