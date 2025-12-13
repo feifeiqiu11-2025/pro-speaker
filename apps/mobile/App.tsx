@@ -16,6 +16,7 @@ import {
   ListenReadScreen,
   ArticleDetailScreen,
   ChatScreen,
+  ChatSummaryScreen,
   ProfileScreen,
 } from './src/screens';
 import AuthScreen from './src/screens/AuthScreen';
@@ -25,6 +26,7 @@ import type {
   SpeakStackParamList,
   ListenReadStackParamList,
 } from './src/types';
+import type { ChatStackParamList } from './src/types/chat';
 
 // Theme colors
 const COLORS = {
@@ -50,6 +52,7 @@ const RootStack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<MainTabParamList>();
 const SpeakStack = createNativeStackNavigator<SpeakStackParamList>();
 const ListenReadStack = createNativeStackNavigator<ListenReadStackParamList>();
+const ChatStack = createNativeStackNavigator<ChatStackParamList>();
 
 // Speak Tab Stack Navigator
 function SpeakStackNavigator() {
@@ -81,6 +84,21 @@ function ListenReadStackNavigator() {
       <ListenReadStack.Screen name="Recording" component={RecordingScreen} />
       <ListenReadStack.Screen name="Feedback" component={FeedbackScreen} />
     </ListenReadStack.Navigator>
+  );
+}
+
+// Chat Tab Stack Navigator
+function ChatStackNavigator() {
+  return (
+    <ChatStack.Navigator
+      screenOptions={{
+        headerShown: false,
+        animation: 'slide_from_right',
+      }}
+    >
+      <ChatStack.Screen name="ChatMain" component={ChatScreen} />
+      <ChatStack.Screen name="ChatSummary" component={ChatSummaryScreen} />
+    </ChatStack.Navigator>
   );
 }
 
@@ -126,7 +144,7 @@ function MainTabNavigator({ navigation }: { navigation: any }) {
       />
       <Tab.Screen
         name="ChatTab"
-        component={ChatScreen}
+        component={ChatStackNavigator}
         options={{
           tabBarIcon: ({ focused }) => (
             <TabIcon icon="💬" focused={focused} />

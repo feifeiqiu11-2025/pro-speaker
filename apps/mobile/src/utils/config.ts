@@ -7,7 +7,10 @@ export const config = {
   // For iOS simulator: http://localhost:3000
   // For Android emulator: http://10.0.2.2:3000
   // For physical device: Use your machine's local IP
-  API_URL: 'http://localhost:3001',
+  // For simulator: http://localhost:3001
+  // For physical device: http://192.168.100.14:3001
+  // For production: https://pro-speakerbackend-production.up.railway.app
+  API_URL: 'https://pro-speakerbackend-production.up.railway.app',
 
   // Recording settings
   MAX_RECORDING_DURATION_SECONDS: 30,

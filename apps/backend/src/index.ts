@@ -12,9 +12,9 @@ import { loadEnv } from './config/index.js';
 import { createApiRouter } from './api/routes/index.js';
 import { errorHandler } from './api/middleware/index.js';
 import { initializeWebSocket } from './api/websocket/index.js';
-import { AnalysisService, NewsService } from './services/index.js';
-import { AzureSpeechAnalyzer, AzureTTSService } from './infrastructure/speech/index.js';
-import { OpenAICommunicationAnalyzer } from './infrastructure/llm/index.js';
+import { AnalysisService, NewsService, ChatService } from './services/index.js';
+import { AzureSpeechAnalyzer, AzureTTSService, AzureChatTTSService } from './infrastructure/speech/index.js';
+import { OpenAICommunicationAnalyzer, ChatConversationManager } from './infrastructure/llm/index.js';
 import { logger } from './shared/utils/logger.js';
 
 async function main() {
@@ -54,11 +54,36 @@ async function main() {
     region: env.AZURE_SPEECH_REGION,
   });
 
+  // Initialize Chat feature services
+  const chatTTSService = new AzureChatTTSService({
+    subscriptionKey: env.AZURE_SPEECH_KEY,
+    region: env.AZURE_SPEECH_REGION,
+  });
+
+  const chatConversationManager = new ChatConversationManager({
+    apiKey: env.OPENAI_API_KEY,
+    model: env.OPENAI_MODEL,
+  });
+
+  const chatService = new ChatService(
+    speechAnalyzer,
+    chatTTSService,
+    chatConversationManager,
+    {
+      maxDurationSeconds: 120, // 2 minutes
+      maxTurns: 10,
+      voiceId: 'en-US-JennyNeural',
+    }
+  );
+
   // Check service health
   const health = await analysisService.healthCheck();
+  const chatHealth = await chatService.healthCheck();
+
   logger.info('Service health check', {
     speech: health.speech ? 'ready' : 'not ready',
     communication: health.communication ? 'ready' : 'not ready',
+    chat: chatHealth.healthy ? 'ready' : 'not ready',
   });
 
   if (!health.speech) {
@@ -66,6 +91,9 @@ async function main() {
   }
   if (!health.communication) {
     logger.warn('OpenAI service not ready - check OPENAI_API_KEY');
+  }
+  if (!chatHealth.healthy) {
+    logger.warn('Chat service not ready', { services: chatHealth.services });
   }
 
   // Create Express app
@@ -109,12 +137,18 @@ async function main() {
   const httpServer = createServer(app);
 
   // Initialize WebSocket server
-  initializeWebSocket(httpServer, {
-    azureKey: env.AZURE_SPEECH_KEY,
-    azureRegion: env.AZURE_SPEECH_REGION,
-    openaiKey: env.OPENAI_API_KEY,
-    openaiModel: env.OPENAI_MODEL,
-  });
+  initializeWebSocket(
+    httpServer,
+    {
+      azureKey: env.AZURE_SPEECH_KEY,
+      azureRegion: env.AZURE_SPEECH_REGION,
+      openaiKey: env.OPENAI_API_KEY,
+      openaiModel: env.OPENAI_MODEL,
+    },
+    {
+      chatService,
+    }
+  );
 
   // Start server
   httpServer.listen(env.PORT, () => {
@@ -130,6 +164,7 @@ async function main() {
     logger.info('  GET  /api/news/:id/audio');
     logger.info('  POST /api/news/refresh');
     logger.info('  WS   / (WebSocket for real-time streaming)');
+    logger.info('  WS   chat:start, chat:audio, chat:end (Chat feature)');
   });
 }
 

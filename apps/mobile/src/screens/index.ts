@@ -5,4 +5,5 @@ export { default as FeedbackScreen } from './FeedbackScreen';
 export { default as ListenReadScreen } from './ListenReadScreen';
 export { default as ArticleDetailScreen } from './ArticleDetailScreen';
 export { default as ChatScreen } from './ChatScreen';
+export { default as ChatSummaryScreen } from './ChatSummaryScreen';
 export { default as ProfileScreen } from './ProfileScreen';

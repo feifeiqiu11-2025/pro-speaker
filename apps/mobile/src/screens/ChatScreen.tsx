@@ -1,122 +1,342 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { useChat } from '../hooks/useChat';
+import type { ChatMode, ChatMessage } from '../types/chat';
 
 // Theme colors matching web app
 const COLORS = {
   background: '#0F172A',
   backgroundSecondary: '#1E293B',
   primary: '#3B82F6',
+  primaryDark: '#2563EB',
   text: '#F8FAFC',
   textSecondary: '#94A3B8',
   textMuted: '#64748B',
   border: '#334155',
+  error: '#EF4444',
+  success: '#22C55E',
+  warning: '#F59E0B',
 };
-
-const UPCOMING_FEATURES = [
-  {
-    icon: '💼',
-    title: 'Job Interview Practice',
-    description: 'Practice common interview questions with AI feedback on your responses.',
-  },
-  {
-    icon: '🎤',
-    title: 'Presentation Coach',
-    description: 'Rehearse presentations and get tips on delivery, pacing, and engagement.',
-  },
-  {
-    icon: '🤝',
-    title: 'Meeting Simulator',
-    description: 'Practice leading meetings, giving updates, and handling Q&A sessions.',
-  },
-  {
-    icon: '💬',
-    title: 'Small Talk Trainer',
-    description: 'Build confidence in casual professional conversations.',
-  },
-];
 
 export default function ChatScreen() {
   const navigation = useNavigation<any>();
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [chatStarted, setChatStarted] = useState(false);
+
+  const {
+    isConnected,
+    conversationId,
+    isRecording,
+    isProcessing,
+    messages,
+    remainingSeconds,
+    summary,
+    error,
+    startChat,
+    startRecording,
+    stopRecording,
+    endChat,
+    resetChat,
+  } = useChat();
+
+  // Navigate to summary when ready
+  useEffect(() => {
+    if (summary) {
+      navigation.navigate('ChatSummary', { summary });
+    }
+  }, [summary, navigation]);
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    if (messages.length > 0) {
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      }, 100);
+    }
+  }, [messages]);
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const handleGoHome = () => {
+    if (chatStarted && conversationId) {
+      // End chat before going home
+      endChat();
+    }
+    resetChat();
+    setChatStarted(false);
     navigation.navigate('Home');
   };
 
+  const handleStartChat = async (mode: ChatMode = 'free_talk') => {
+    setChatStarted(true);
+    await startChat(mode);
+  };
+
+  const handleEndChat = () => {
+    endChat();
+  };
+
+  const handleResetAndTryAgain = () => {
+    resetChat();
+    setChatStarted(false);
+  };
+
+  // ============================================================
+  // IDLE STATE - Not started
+  // ============================================================
+  if (!chatStarted) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top']}>
+        <ScrollView
+          style={styles.scrollView}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+        >
+          {/* Header */}
+          <View style={styles.header}>
+            <View style={styles.headerRow}>
+              <TouchableOpacity onPress={handleGoHome} style={styles.homeButton}>
+                <Text style={styles.homeIcon}>☰</Text>
+              </TouchableOpacity>
+              <Text style={styles.title}>AI Chat Coach</Text>
+              <View style={styles.headerSpacer} />
+            </View>
+            <Text style={styles.subtitle}>Practice natural conversation</Text>
+          </View>
+
+          {/* Intro */}
+          <View style={styles.introCard}>
+            <Text style={styles.introText}>
+              Have a free-form conversation with your AI coach. Practice speaking
+              naturally while getting real-time feedback on pronunciation and
+              communication style.
+            </Text>
+          </View>
+
+          {/* Mode Selection */}
+          <View style={styles.modeSection}>
+            <Text style={styles.sectionLabel}>Choose a mode:</Text>
+
+            <TouchableOpacity
+              style={styles.modeButton}
+              onPress={() => handleStartChat('free_talk')}
+              activeOpacity={0.7}
+            >
+              <View style={styles.modeIconContainer}>
+                <Text style={styles.modeEmoji}>💬</Text>
+              </View>
+              <View style={styles.modeTextContainer}>
+                <Text style={styles.modeTitle}>Free Talk</Text>
+                <Text style={styles.modeDescription}>
+                  Talk about anything on your mind
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.modeButton}
+              onPress={() => handleStartChat('reflective')}
+              activeOpacity={0.7}
+            >
+              <View style={styles.modeIconContainer}>
+                <Text style={styles.modeEmoji}>🧠</Text>
+              </View>
+              <View style={styles.modeTextContainer}>
+                <Text style={styles.modeTitle}>Think Out Loud</Text>
+                <Text style={styles.modeDescription}>
+                  Work through a decision or idea
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.modeButton}
+              onPress={() => handleStartChat('professional')}
+              activeOpacity={0.7}
+            >
+              <View style={styles.modeIconContainer}>
+                <Text style={styles.modeEmoji}>💼</Text>
+              </View>
+              <View style={styles.modeTextContainer}>
+                <Text style={styles.modeTitle}>Professional</Text>
+                <Text style={styles.modeDescription}>
+                  Practice workplace communication
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          {/* How it works */}
+          <View style={styles.tipsCard}>
+            <Text style={styles.tipsTitle}>How it works:</Text>
+            <Text style={styles.tipItem}>• Hold the button to speak</Text>
+            <Text style={styles.tipItem}>• Release to hear AI respond</Text>
+            <Text style={styles.tipItem}>• 2 minute conversation limit</Text>
+            <Text style={styles.tipItem}>• Get a full summary at the end</Text>
+          </View>
+
+          <View style={styles.bottomPadding} />
+        </ScrollView>
+      </SafeAreaView>
+    );
+  }
+
+  // ============================================================
+  // ACTIVE CHAT STATE
+  // ============================================================
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
+      {/* Chat Header */}
+      <View style={styles.chatHeader}>
+        <Text
+          style={[
+            styles.timer,
+            remainingSeconds <= 30 && styles.timerWarning,
+          ]}
+        >
+          {formatTime(remainingSeconds)}
+        </Text>
+        <TouchableOpacity
+          style={styles.endButton}
+          onPress={handleEndChat}
+          disabled={isProcessing}
+        >
+          <Text style={styles.endButtonText}>End Chat</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Messages */}
       <ScrollView
-        style={styles.scrollView}
+        ref={scrollViewRef}
+        style={styles.messagesContainer}
+        contentContainerStyle={styles.messagesContent}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
       >
-        {/* Header with Home Button */}
-        <View style={styles.header}>
-          <View style={styles.headerRow}>
-            <TouchableOpacity onPress={handleGoHome} style={styles.homeButton}>
-              <Text style={styles.homeIcon}>☰</Text>
-            </TouchableOpacity>
-            <Text style={styles.title}>AI Chat Coach</Text>
-            <View style={styles.headerSpacer} />
+        {messages.map((message, index) => (
+          <MessageBubble key={message.id || index} message={message} />
+        ))}
+
+        {/* Processing indicator */}
+        {isProcessing && (
+          <View style={[styles.messageBubble, styles.assistantBubble]}>
+            <ActivityIndicator size="small" color={COLORS.primary} />
+            <Text style={styles.processingText}>
+              {messages.length <= 1 ? 'Connecting...' : 'AI is thinking...'}
+            </Text>
           </View>
-          <Text style={styles.subtitle}>Coming Soon</Text>
-        </View>
-
-        {/* Coming Soon Card */}
-        <View style={styles.comingSoonCard}>
-          <View style={styles.iconContainer}>
-            <Text style={styles.icon}>🚀</Text>
-          </View>
-          <Text style={styles.comingSoonTitle}>
-            Interactive Speaking Practice
-          </Text>
-          <Text style={styles.comingSoonText}>
-            Chat with an AI coach in real-time to practice professional
-            conversations. Get instant feedback on your communication skills.
-          </Text>
-        </View>
-
-        {/* Features Preview */}
-        <View style={styles.featuresSection}>
-          <Text style={styles.sectionTitle}>What's Coming</Text>
-
-          {UPCOMING_FEATURES.map((feature, index) => (
-            <View key={index} style={styles.featureCard}>
-              <View style={styles.featureIconContainer}>
-                <Text style={styles.featureIcon}>{feature.icon}</Text>
-              </View>
-              <View style={styles.featureContent}>
-                <Text style={styles.featureTitle}>{feature.title}</Text>
-                <Text style={styles.featureDesc}>{feature.description}</Text>
-              </View>
-            </View>
-          ))}
-        </View>
-
-        {/* Notify Me */}
-        <View style={styles.notifySection}>
-          <TouchableOpacity style={styles.notifyButton} activeOpacity={0.8}>
-            <Text style={styles.notifyButtonIcon}>🔔</Text>
-            <Text style={styles.notifyButtonText}>Get Notified When Ready</Text>
-          </TouchableOpacity>
-          <Text style={styles.notifyHint}>
-            We'll let you know when AI Chat Coach launches
-          </Text>
-        </View>
-
-        {/* Bottom padding for tab bar */}
-        <View style={styles.bottomPadding} />
+        )}
       </ScrollView>
+
+      {/* Error display */}
+      {error && (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+          <TouchableOpacity
+            style={styles.retryButton}
+            onPress={handleResetAndTryAgain}
+          >
+            <Text style={styles.retryButtonText}>Try Again</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
+      {/* Hold to talk button */}
+      <View style={styles.bottomContainer}>
+        <Pressable
+          style={[
+            styles.talkButton,
+            isRecording && styles.talkButtonActive,
+            (isProcessing || !isConnected) && styles.talkButtonDisabled,
+          ]}
+          onPressIn={startRecording}
+          onPressOut={stopRecording}
+          disabled={isProcessing || !isConnected}
+        >
+          <Text style={styles.talkButtonIcon}>
+            {isRecording ? '🔴' : '🎙️'}
+          </Text>
+          <Text style={styles.talkButtonText}>
+            {isRecording
+              ? 'Release to send'
+              : isProcessing
+              ? 'AI responding...'
+              : !isConnected
+              ? 'Connecting...'
+              : 'Hold to speak'}
+          </Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 }
+
+// ============================================================
+// MESSAGE BUBBLE COMPONENT
+// ============================================================
+
+interface MessageBubbleProps {
+  message: ChatMessage;
+}
+
+function MessageBubble({ message }: MessageBubbleProps) {
+  const isUser = message.role === 'user';
+
+  return (
+    <View
+      style={[
+        styles.messageBubble,
+        isUser ? styles.userBubble : styles.assistantBubble,
+      ]}
+    >
+      <Text
+        style={[
+          styles.messageText,
+          isUser ? styles.userText : styles.assistantText,
+        ]}
+      >
+        {message.content}
+      </Text>
+
+      {/* Show mispronounced words for user messages */}
+      {isUser && message.pronunciation?.mispronounced && message.pronunciation.mispronounced.length > 0 && (
+        <View style={styles.pronunciationHint}>
+          {message.pronunciation.mispronounced.slice(0, 2).map((word, i) => (
+            <Text key={i} style={styles.pronunciationText}>
+              "{word.word}" → {word.suggestion}
+            </Text>
+          ))}
+        </View>
+      )}
+
+      {/* Show inline coaching for assistant messages */}
+      {!isUser && message.inlineCoaching && (
+        <View style={styles.coachingHint}>
+          <Text style={styles.coachingText}>
+            💡 {message.inlineCoaching.tip}
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+}
+
+// ============================================================
+// STYLES
+// ============================================================
 
 const styles = StyleSheet.create({
   container: {
@@ -163,119 +383,235 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color: COLORS.primary,
-    textAlign: 'center',
-    fontWeight: '600',
-  },
-  comingSoonCard: {
-    backgroundColor: 'rgba(59, 130, 246, 0.1)',
-    marginHorizontal: 20,
-    borderRadius: 20,
-    padding: 24,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(59, 130, 246, 0.2)',
-    marginBottom: 32,
-  },
-  iconContainer: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: 'rgba(59, 130, 246, 0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  icon: {
-    fontSize: 36,
-  },
-  comingSoonTitle: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: COLORS.text,
-    textAlign: 'center',
-    marginBottom: 12,
-  },
-  comingSoonText: {
-    fontSize: 15,
     color: COLORS.textSecondary,
     textAlign: 'center',
+  },
+  introCard: {
+    backgroundColor: COLORS.backgroundSecondary,
+    marginHorizontal: 20,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 24,
+  },
+  introText: {
+    fontSize: 15,
+    color: COLORS.textSecondary,
     lineHeight: 22,
   },
-  featuresSection: {
+  modeSection: {
     paddingHorizontal: 20,
-    marginBottom: 32,
+    marginBottom: 24,
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: COLORS.text,
-    marginBottom: 16,
+  sectionLabel: {
+    fontSize: 14,
+    color: COLORS.textMuted,
+    marginBottom: 12,
   },
-  featureCard: {
+  modeButton: {
     flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: COLORS.backgroundSecondary,
     borderRadius: 16,
     padding: 16,
     marginBottom: 12,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
-  featureIconContainer: {
+  modeIconContainer: {
     width: 48,
     height: 48,
     borderRadius: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: 'rgba(59, 130, 246, 0.1)',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 14,
   },
-  featureIcon: {
+  modeEmoji: {
     fontSize: 24,
   },
-  featureContent: {
+  modeTextContainer: {
     flex: 1,
   },
-  featureTitle: {
+  modeTitle: {
     fontSize: 16,
     fontWeight: '600',
     color: COLORS.text,
-    marginBottom: 4,
+    marginBottom: 2,
   },
-  featureDesc: {
+  modeDescription: {
     fontSize: 14,
     color: COLORS.textSecondary,
-    lineHeight: 20,
   },
-  notifySection: {
-    paddingHorizontal: 20,
-    alignItems: 'center',
-  },
-  notifyButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+  tipsCard: {
     backgroundColor: COLORS.backgroundSecondary,
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    marginBottom: 12,
+    marginHorizontal: 20,
+    borderRadius: 16,
+    padding: 16,
   },
-  notifyButtonIcon: {
-    fontSize: 18,
-    marginRight: 10,
-  },
-  notifyButtonText: {
-    fontSize: 15,
+  tipsTitle: {
+    fontSize: 14,
     fontWeight: '600',
     color: COLORS.text,
+    marginBottom: 8,
   },
-  notifyHint: {
-    fontSize: 13,
-    color: COLORS.textMuted,
-    textAlign: 'center',
+  tipItem: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+    marginBottom: 4,
   },
   bottomPadding: {
     height: 100,
+  },
+
+  // Active chat styles
+  chatHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+  },
+  timer: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: COLORS.text,
+    fontVariant: ['tabular-nums'],
+  },
+  timerWarning: {
+    color: COLORS.warning,
+  },
+  endButton: {
+    backgroundColor: COLORS.backgroundSecondary,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  endButtonText: {
+    color: COLORS.text,
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  messagesContainer: {
+    flex: 1,
+  },
+  messagesContent: {
+    padding: 16,
+    paddingBottom: 8,
+  },
+  messageBubble: {
+    maxWidth: '85%',
+    padding: 14,
+    borderRadius: 18,
+    marginBottom: 12,
+  },
+  userBubble: {
+    alignSelf: 'flex-end',
+    backgroundColor: COLORS.primary,
+    borderBottomRightRadius: 4,
+  },
+  assistantBubble: {
+    alignSelf: 'flex-start',
+    backgroundColor: COLORS.backgroundSecondary,
+    borderBottomLeftRadius: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  messageText: {
+    fontSize: 16,
+    lineHeight: 22,
+  },
+  userText: {
+    color: COLORS.text,
+  },
+  assistantText: {
+    color: COLORS.text,
+  },
+  pronunciationHint: {
+    marginTop: 10,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.2)',
+  },
+  pronunciationText: {
+    fontSize: 12,
+    color: COLORS.warning,
+    fontStyle: 'italic',
+    marginBottom: 2,
+  },
+  coachingHint: {
+    marginTop: 10,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
+  },
+  coachingText: {
+    fontSize: 13,
+    color: COLORS.textSecondary,
+  },
+  processingText: {
+    marginLeft: 10,
+    color: COLORS.textSecondary,
+    fontSize: 14,
+  },
+  errorContainer: {
+    backgroundColor: COLORS.error,
+    padding: 14,
+    marginHorizontal: 16,
+    marginBottom: 8,
+    borderRadius: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  errorText: {
+    color: COLORS.text,
+    fontSize: 14,
+    flex: 1,
+  },
+  retryButton: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+    marginLeft: 10,
+  },
+  retryButtonText: {
+    color: COLORS.text,
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  bottomContainer: {
+    padding: 20,
+    paddingBottom: 36,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
+  },
+  talkButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLORS.primary,
+    paddingVertical: 20,
+    borderRadius: 16,
+  },
+  talkButtonActive: {
+    backgroundColor: COLORS.error,
+  },
+  talkButtonDisabled: {
+    backgroundColor: COLORS.backgroundSecondary,
+    opacity: 0.7,
+  },
+  talkButtonIcon: {
+    fontSize: 24,
+    marginRight: 12,
+  },
+  talkButtonText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: COLORS.text,
   },
 });
