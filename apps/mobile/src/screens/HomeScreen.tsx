@@ -5,73 +5,67 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Dimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { RootStackParamList, DailyPrompt } from '../types';
+import { LinearGradient } from 'expo-linear-gradient';
 
-type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
+// Theme colors
+const COLORS = {
+  background: '#0F172A',
+  backgroundSecondary: '#1E293B',
+  primary: '#3B82F6',
+  text: '#F8FAFC',
+  textSecondary: '#94A3B8',
+  textMuted: '#64748B',
+  border: '#334155',
+};
 
-const { width } = Dimensions.get('window');
+interface HomeScreenProps {
+  onNavigateToTab: (tabName: string) => void;
+}
 
-// Curated daily prompts with visual styling
-const DAILY_PROMPTS: (DailyPrompt & { icon: string; gradient: string[] })[] = [
+const FEATURES = [
   {
-    id: '1',
-    mode: 'professional',
-    title: 'Project Update',
-    prompt: 'Share a 1-minute update on what you accomplished this week.',
-    hints: [
-      'Lead with your biggest win',
-      'Mention one challenge you solved',
-      'Share your focus for next week',
-    ],
-    category: 'Work',
+    id: 'speak',
+    icon: '🎙️',
+    title: 'Speak',
+    subtitle: '1-Minute Workout',
+    description: 'Practice speaking with daily prompts and get AI feedback',
+    gradient: ['#667eea', '#764ba2'] as const,
+    tabName: 'SpeakTab',
+  },
+  {
+    id: 'listen',
+    icon: '🎧',
+    title: 'Listen & Read',
+    subtitle: 'Daily Tech News',
+    description: 'Improve pronunciation with curated articles',
+    gradient: ['#4facfe', '#00f2fe'] as const,
+    tabName: 'ListenReadTab',
+  },
+  {
+    id: 'chat',
+    icon: '💬',
+    title: 'Chat Coach',
+    subtitle: 'Coming Soon',
+    description: 'Practice conversations for interviews & presentations',
+    gradient: ['#f093fb', '#f5576c'] as const,
+    tabName: 'ChatTab',
+  },
+  {
+    id: 'profile',
     icon: '📊',
-    gradient: ['#667eea', '#764ba2'],
-  },
-  {
-    id: '2',
-    mode: 'professional',
-    title: 'Introduce Yourself',
-    prompt: 'You just joined a new team meeting. Introduce yourself!',
-    hints: [
-      'Your name and role',
-      'What you bring to the team',
-      'A fun fact about you',
-    ],
-    category: 'Networking',
-    icon: '👋',
-    gradient: ['#f093fb', '#f5576c'],
-  },
-  {
-    id: '3',
-    mode: 'casual',
-    title: 'Weekend Story',
-    prompt: 'Tell a friend about something interesting from your weekend.',
-    hints: [
-      'Set the scene - where were you?',
-      'What happened?',
-      'Why was it memorable?',
-    ],
-    category: 'Social',
-    icon: '☀️',
-    gradient: ['#4facfe', '#00f2fe'],
+    title: 'Progress',
+    subtitle: 'Track & Improve',
+    description: 'Monitor your speaking stats and streaks',
+    gradient: ['#11998e', '#38ef7d'] as const,
+    tabName: 'ProfileTab',
   },
 ];
 
-export default function HomeScreen({ navigation }: Props) {
-  const handlePromptSelect = (prompt: DailyPrompt) => {
-    navigation.navigate('Recording', { mode: prompt.mode, prompt });
-  };
-
-  const handleFreeTalk = () => {
-    navigation.navigate('Recording', { mode: 'free_talk' });
-  };
-
+export default function HomeScreen({ onNavigateToTab }: HomeScreenProps) {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -79,72 +73,47 @@ export default function HomeScreen({ navigation }: Props) {
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.greeting}>Ready to practice?</Text>
-          <Text style={styles.title}>1-Minute Workout</Text>
+          <View style={styles.logoContainer}>
+            <Text style={styles.logoIcon}>🎙️</Text>
+            <View>
+              <Text style={styles.appName}>ProSpeaker</Text>
+              <Text style={styles.tagline}>1-Minute Speaking Workout</Text>
+            </View>
+          </View>
+          <Text style={styles.subtitle}>
+            Speak with confidence, communicate with impact
+          </Text>
         </View>
 
-        {/* Prompt Cards */}
-        <View style={styles.cardsContainer}>
-          {DAILY_PROMPTS.map((prompt, index) => (
+        {/* Feature Tiles */}
+        <View style={styles.tilesContainer}>
+          {FEATURES.map((feature) => (
             <TouchableOpacity
-              key={prompt.id}
-              style={styles.card}
-              onPress={() => handlePromptSelect(prompt)}
-              activeOpacity={0.9}
+              key={feature.id}
+              style={styles.tile}
+              onPress={() => onNavigateToTab(feature.tabName)}
+              activeOpacity={0.85}
             >
-              {/* Gradient Background */}
-              <View
-                style={[
-                  styles.cardGradient,
-                  { backgroundColor: prompt.gradient[0] }
-                ]}
+              <LinearGradient
+                colors={[feature.gradient[0], feature.gradient[1]]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.tileGradient}
               />
-
-              {/* Card Content */}
-              <View style={styles.cardContent}>
-                <View style={styles.cardHeader}>
-                  <Text style={styles.cardIcon}>{prompt.icon}</Text>
-                  <View style={styles.categoryBadge}>
-                    <Text style={styles.categoryText}>{prompt.category}</Text>
-                  </View>
+              <View style={styles.tileContent}>
+                <Text style={styles.tileIcon}>{feature.icon}</Text>
+                <View style={styles.tileTextContainer}>
+                  <Text style={styles.tileTitle}>{feature.title}</Text>
+                  <Text style={styles.tileSubtitle}>{feature.subtitle}</Text>
                 </View>
-
-                <Text style={styles.cardTitle}>{prompt.title}</Text>
-                <Text style={styles.cardPrompt}>{prompt.prompt}</Text>
-
-                <View style={styles.hintsContainer}>
-                  {prompt.hints.map((hint, idx) => (
-                    <View key={idx} style={styles.hintRow}>
-                      <View style={styles.hintDot} />
-                      <Text style={styles.hintText}>{hint}</Text>
-                    </View>
-                  ))}
-                </View>
-
-                <View style={styles.startButton}>
-                  <Text style={styles.startButtonText}>Start Speaking</Text>
-                  <Text style={styles.startArrow}>→</Text>
+                <Text style={styles.tileDescription}>{feature.description}</Text>
+                <View style={styles.tileArrow}>
+                  <Text style={styles.tileArrowText}>→</Text>
                 </View>
               </View>
             </TouchableOpacity>
           ))}
         </View>
-
-        {/* Free Talk Option */}
-        <TouchableOpacity
-          style={styles.freeTalkCard}
-          onPress={handleFreeTalk}
-          activeOpacity={0.8}
-        >
-          <View style={styles.freeTalkContent}>
-            <Text style={styles.freeTalkIcon}>🎙️</Text>
-            <View style={styles.freeTalkText}>
-              <Text style={styles.freeTalkTitle}>Free Talk</Text>
-              <Text style={styles.freeTalkSubtitle}>Speak about anything</Text>
-            </View>
-          </View>
-          <Text style={styles.freeTalkArrow}>→</Text>
-        </TouchableOpacity>
 
         {/* Bottom padding */}
         <View style={styles.bottomPadding} />
@@ -156,7 +125,7 @@ export default function HomeScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F172A',
+    backgroundColor: COLORS.background,
   },
   scrollView: {
     flex: 1,
@@ -166,152 +135,100 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 24,
+    paddingTop: 20,
+    paddingBottom: 28,
   },
-  greeting: {
-    fontSize: 16,
-    color: '#94A3B8',
-    marginBottom: 4,
+  logoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
   },
-  title: {
+  logoIcon: {
+    fontSize: 40,
+    marginRight: 14,
+  },
+  appName: {
     fontSize: 28,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: COLORS.text,
   },
-  cardsContainer: {
+  tagline: {
+    fontSize: 14,
+    color: COLORS.primary,
+    fontWeight: '600',
+    marginTop: 2,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: COLORS.textSecondary,
+    lineHeight: 24,
+  },
+  tilesContainer: {
     paddingHorizontal: 20,
   },
-  card: {
+  tile: {
     borderRadius: 20,
-    marginBottom: 20,
+    marginBottom: 16,
     overflow: 'hidden',
-    backgroundColor: '#1E293B',
+    height: 130,
   },
-  cardGradient: {
+  tileGradient: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: 6,
+    bottom: 0,
+    opacity: 0.15,
   },
-  cardContent: {
-    padding: 20,
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  cardIcon: {
-    fontSize: 32,
-  },
-  categoryBadge: {
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-  },
-  categoryText: {
-    color: '#94A3B8',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  cardTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    marginBottom: 8,
-  },
-  cardPrompt: {
-    fontSize: 15,
-    color: '#CBD5E1',
-    lineHeight: 22,
-    marginBottom: 16,
-  },
-  hintsContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 12,
-    padding: 14,
-    marginBottom: 16,
-  },
-  hintRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 8,
-  },
-  hintDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#64748B',
-    marginRight: 10,
-    marginTop: 6,
-  },
-  hintText: {
+  tileContent: {
     flex: 1,
-    color: '#94A3B8',
-    fontSize: 14,
-    lineHeight: 20,
+    padding: 18,
+    backgroundColor: COLORS.backgroundSecondary,
   },
-  startButton: {
+  tileIcon: {
+    fontSize: 26,
+    position: 'absolute',
+    top: 14,
+    right: 14,
+  },
+  tileTextContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#3B82F6',
-    borderRadius: 12,
-    paddingVertical: 14,
+    alignItems: 'baseline',
+    marginBottom: 6,
   },
-  startButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
-    marginRight: 8,
-  },
-  startArrow: {
-    color: '#FFFFFF',
-    fontSize: 18,
-  },
-  freeTalkCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#1E293B',
-    marginHorizontal: 20,
-    marginTop: 8,
-    padding: 20,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#334155',
-    borderStyle: 'dashed',
-  },
-  freeTalkContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  freeTalkIcon: {
-    fontSize: 28,
-    marginRight: 14,
-  },
-  freeTalkText: {
-    flexDirection: 'column',
-  },
-  freeTalkTitle: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#FFFFFF',
-  },
-  freeTalkSubtitle: {
-    fontSize: 14,
-    color: '#64748B',
-    marginTop: 2,
-  },
-  freeTalkArrow: {
+  tileTitle: {
     fontSize: 20,
-    color: '#64748B',
+    fontWeight: '700',
+    color: COLORS.text,
+    marginRight: 10,
+  },
+  tileSubtitle: {
+    fontSize: 12,
+    color: COLORS.primary,
+    fontWeight: '600',
+  },
+  tileDescription: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+    lineHeight: 20,
+    paddingRight: 40,
+  },
+  tileArrow: {
+    position: 'absolute',
+    bottom: 14,
+    right: 14,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tileArrowText: {
+    fontSize: 16,
+    color: COLORS.text,
   },
   bottomPadding: {
-    height: 20,
+    height: 100,
   },
 });

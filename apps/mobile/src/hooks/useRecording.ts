@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { Audio } from 'expo-av';
-import * as FileSystem from 'expo-file-system';
+import { readAsStringAsync, deleteAsync, EncodingType } from 'expo-file-system/legacy';
 import type { SessionMode, SessionResult } from '../types';
 import { config } from '../utils/config';
 
@@ -121,8 +121,8 @@ export function useRecording({
       }
 
       // Read the audio file as base64
-      const audioBase64 = await FileSystem.readAsStringAsync(uri, {
-        encoding: 'base64',
+      const audioBase64 = await readAsStringAsync(uri, {
+        encoding: EncodingType.Base64,
       });
 
       // Send to backend for analysis
@@ -182,7 +182,7 @@ export function useRecording({
       onComplete?.(result);
 
       // Clean up the audio file
-      await FileSystem.deleteAsync(uri, { idempotent: true });
+      await deleteAsync(uri, { idempotent: true });
     } catch (err) {
       setIsAnalyzing(false);
       const message = err instanceof Error ? err.message : 'Failed to analyze recording';
