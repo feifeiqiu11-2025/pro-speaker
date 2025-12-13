@@ -1370,6 +1370,393 @@
       overflow-y: auto;
     }
 
+    /* ========== Chat View Styles ========== */
+    .chat-view {
+      display: none;
+      max-width: 800px;
+      margin: 0 auto;
+      padding-top: 20px;
+    }
+    .chat-view.active { display: block; }
+
+    /* Chat Mode Selection */
+    .chat-intro {
+      background: #1E293B;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .chat-intro-text {
+      font-size: 15px;
+      color: #94A3B8;
+      line-height: 1.6;
+    }
+
+    .chat-mode-section {
+      margin-bottom: 24px;
+    }
+    .chat-mode-label {
+      font-size: 14px;
+      color: #64748B;
+      margin-bottom: 12px;
+    }
+    .chat-mode-card {
+      display: flex;
+      align-items: center;
+      background: #1E293B;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .chat-mode-card:hover {
+      border-color: #3B82F6;
+      transform: translateY(-2px);
+    }
+    .chat-mode-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(59, 130, 246, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-right: 14px;
+    }
+    .chat-mode-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #F8FAFC;
+      margin-bottom: 2px;
+    }
+    .chat-mode-description {
+      font-size: 14px;
+      color: #94A3B8;
+    }
+
+    .chat-tips {
+      background: #1E293B;
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .chat-tips-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #F8FAFC;
+      margin-bottom: 8px;
+    }
+    .chat-tips-item {
+      font-size: 14px;
+      color: #94A3B8;
+      margin-bottom: 4px;
+    }
+
+    /* Active Chat View */
+    .chat-active-view {
+      display: none;
+      max-width: 800px;
+      margin: 0 auto;
+      height: 100vh;
+      padding-top: 20px;
+      flex-direction: column;
+    }
+    .chat-active-view.active {
+      display: flex;
+    }
+
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 20px;
+      border-bottom: 1px solid #334155;
+      flex-shrink: 0;
+    }
+    .chat-timer {
+      font-size: 28px;
+      font-weight: 700;
+      color: #F8FAFC;
+      font-variant-numeric: tabular-nums;
+    }
+    .chat-timer.warning { color: #F59E0B; }
+    .chat-end-btn {
+      background: #1E293B;
+      border: 1px solid #334155;
+      color: #F8FAFC;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .chat-end-btn:hover { background: #334155; }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+    .chat-message {
+      max-width: 85%;
+      padding: 14px;
+      border-radius: 18px;
+      margin-bottom: 12px;
+    }
+    .chat-message.user {
+      align-self: flex-end;
+      margin-left: auto;
+      background: #3B82F6;
+      border-bottom-right-radius: 4px;
+    }
+    .chat-message.assistant {
+      align-self: flex-start;
+      background: #1E293B;
+      border-bottom-left-radius: 4px;
+    }
+    .chat-message-text {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #F8FAFC;
+    }
+    .chat-message-coaching {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #334155;
+      font-size: 13px;
+      color: #94A3B8;
+    }
+    .chat-message-pronunciation {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      font-size: 12px;
+      color: #F59E0B;
+      font-style: italic;
+    }
+    .chat-processing {
+      display: flex;
+      align-items: center;
+      background: #1E293B;
+      padding: 14px;
+      border-radius: 18px;
+      border-bottom-left-radius: 4px;
+      margin-bottom: 12px;
+      max-width: 200px;
+    }
+    .chat-processing-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3B82F6;
+      margin-right: 6px;
+      animation: chatPulse 1.4s infinite;
+    }
+    .chat-processing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .chat-processing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes chatPulse {
+      0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+      40% { opacity: 1; transform: scale(1); }
+    }
+    .chat-processing-text {
+      margin-left: 8px;
+      color: #94A3B8;
+      font-size: 14px;
+    }
+
+    .chat-error {
+      background: #EF4444;
+      padding: 14px;
+      margin: 0 16px 8px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .chat-error-text {
+      color: #F8FAFC;
+      font-size: 14px;
+      flex: 1;
+    }
+    .chat-error-retry {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: #F8FAFC;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .chat-bottom {
+      padding: 20px;
+      border-top: 1px solid #334155;
+      flex-shrink: 0;
+    }
+    .chat-talk-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      background: #3B82F6;
+      border: none;
+      padding: 20px;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .chat-talk-btn:hover { background: #2563EB; }
+    .chat-talk-btn.recording {
+      background: #EF4444;
+    }
+    .chat-talk-btn.disabled {
+      background: #1E293B;
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+    .chat-talk-icon {
+      font-size: 24px;
+      margin-right: 12px;
+    }
+    .chat-talk-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #F8FAFC;
+    }
+
+    /* Chat Summary View */
+    .chat-summary-view {
+      display: none;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .chat-summary-view.active { display: block; }
+
+    .chat-summary-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .chat-summary-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #F8FAFC;
+      margin-bottom: 8px;
+    }
+    .chat-summary-subtitle {
+      font-size: 16px;
+      color: #94A3B8;
+    }
+
+    .chat-summary-scores {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .chat-summary-score-card {
+      background: #1E293B;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+    }
+    .chat-summary-score-card.main {
+      grid-column: span 2;
+      background: linear-gradient(135deg, #1E3A5F 0%, #1E293B 100%);
+      border: 2px solid #3B82F6;
+    }
+    .chat-summary-score-value {
+      font-size: 36px;
+      font-weight: 700;
+      color: #F8FAFC;
+    }
+    .chat-summary-score-value.good { color: #10B981; }
+    .chat-summary-score-value.medium { color: #F59E0B; }
+    .chat-summary-score-value.low { color: #EF4444; }
+    .chat-summary-score-label {
+      font-size: 14px;
+      color: #94A3B8;
+      margin-top: 4px;
+    }
+
+    .chat-summary-section {
+      background: #1E293B;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .chat-summary-section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #64748B;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+    .chat-summary-section-content {
+      font-size: 15px;
+      color: #CBD5E1;
+      line-height: 1.6;
+    }
+    .chat-summary-list {
+      list-style: none;
+    }
+    .chat-summary-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #334155;
+      color: #CBD5E1;
+      display: flex;
+      align-items: flex-start;
+      font-size: 14px;
+    }
+    .chat-summary-list li:last-child { border-bottom: none; }
+    .chat-summary-list.strengths li::before {
+      content: '+';
+      color: #10B981;
+      font-weight: 700;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+    .chat-summary-list.improvements li::before {
+      content: '-';
+      color: #F59E0B;
+      font-weight: 700;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+
+    .chat-summary-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .chat-summary-btn {
+      flex: 1;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .chat-summary-btn.primary {
+      background: #3B82F6;
+      color: #F8FAFC;
+    }
+    .chat-summary-btn.primary:hover { background: #2563EB; }
+    .chat-summary-btn.secondary {
+      background: #1E293B;
+      color: #F8FAFC;
+      border: 1px solid #334155;
+    }
+    .chat-summary-btn.secondary:hover { background: #334155; }
+
     /* Responsive */
     @media (max-width: 768px) {
       .cards-grid {
@@ -1476,6 +1863,123 @@
       <div class="news-loading" id="newsLoading">
         <div class="spinner"></div>
         <p>Loading today's news...</p>
+      </div>
+
+      <!-- CHAT Section -->
+      <div class="section-divider">
+        <div class="section-divider-line"></div>
+        <span class="section-divider-title">Chat Coach</span>
+        <div class="section-divider-line"></div>
+      </div>
+
+      <div class="free-talk-card" onclick="openChatView()">
+        <div class="free-talk-content">
+          <span class="free-talk-icon">💬</span>
+          <div>
+            <div class="free-talk-title">AI Chat Coach</div>
+            <div class="free-talk-subtitle">Practice natural conversation with AI</div>
+          </div>
+        </div>
+        <span class="free-talk-arrow">→</span>
+      </div>
+    </div>
+
+    <!-- Chat Mode Selection View -->
+    <div class="chat-view" id="chatView">
+      <button class="back-button" onclick="goHomeFromChat()">< Back to home</button>
+
+      <div class="header" style="text-align: center; padding-bottom: 16px;">
+        <h1 class="app-name">AI Chat Coach</h1>
+        <p class="app-tagline-sub">Practice natural conversation</p>
+      </div>
+
+      <div class="chat-intro">
+        <p class="chat-intro-text">
+          Have a free-form conversation with your AI coach. Practice speaking naturally while getting real-time feedback on pronunciation and communication style.
+        </p>
+      </div>
+
+      <div class="chat-mode-section">
+        <p class="chat-mode-label">Choose a mode:</p>
+
+        <div class="chat-mode-card" onclick="startChatWithMode('free_talk')">
+          <div class="chat-mode-icon">💬</div>
+          <div>
+            <div class="chat-mode-title">Free Talk</div>
+            <div class="chat-mode-description">Talk about anything on your mind</div>
+          </div>
+        </div>
+
+        <div class="chat-mode-card" onclick="startChatWithMode('reflective')">
+          <div class="chat-mode-icon">🧠</div>
+          <div>
+            <div class="chat-mode-title">Think Out Loud</div>
+            <div class="chat-mode-description">Work through a decision or idea</div>
+          </div>
+        </div>
+
+        <div class="chat-mode-card" onclick="startChatWithMode('professional')">
+          <div class="chat-mode-icon">💼</div>
+          <div>
+            <div class="chat-mode-title">Professional</div>
+            <div class="chat-mode-description">Practice workplace communication</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-tips">
+        <p class="chat-tips-title">How it works:</p>
+        <p class="chat-tips-item">• Click the button to start/stop recording</p>
+        <p class="chat-tips-item">• AI will respond with voice</p>
+        <p class="chat-tips-item">• 2 minute conversation limit</p>
+        <p class="chat-tips-item">• Get a full summary at the end</p>
+      </div>
+    </div>
+
+    <!-- Active Chat View -->
+    <div class="chat-active-view" id="chatActiveView">
+      <div class="chat-header">
+        <span class="chat-timer" id="chatTimer">2:00</span>
+        <button class="chat-end-btn" onclick="endChatConversation()">End Chat</button>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+        <!-- Messages will be added here dynamically -->
+      </div>
+
+      <div class="chat-error" id="chatError" style="display: none;">
+        <span class="chat-error-text" id="chatErrorText"></span>
+        <button class="chat-error-retry" onclick="retryChatConnection()">Try Again</button>
+      </div>
+
+      <div class="chat-bottom">
+        <button class="chat-talk-btn" id="chatTalkBtn" onmousedown="startChatRecording()" onmouseup="stopChatRecording()" ontouchstart="startChatRecording()" ontouchend="stopChatRecording()">
+          <span class="chat-talk-icon" id="chatTalkIcon">🎙️</span>
+          <span class="chat-talk-text" id="chatTalkText">Hold to speak</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat Summary View -->
+    <div class="chat-summary-view" id="chatSummaryView">
+      <button class="back-button" onclick="goHomeFromChatSummary()">< Back to home</button>
+
+      <div class="chat-summary-header">
+        <h1 class="chat-summary-title">Conversation Complete</h1>
+        <p class="chat-summary-subtitle" id="chatSummaryDuration">2 minutes • 5 turns</p>
+      </div>
+
+      <div class="chat-summary-scores" id="chatSummaryScores">
+        <!-- Scores will be populated dynamically -->
+      </div>
+
+      <div id="chatSummarySections">
+        <!-- Sections will be populated dynamically -->
+      </div>
+
+      <div class="chat-summary-actions">
+        <button class="chat-summary-btn secondary" onclick="goHomeFromChatSummary()">Back to Home</button>
+        <button class="chat-summary-btn primary" onclick="startNewChat()">New Conversation</button>
       </div>
     </div>
 
@@ -3320,6 +3824,542 @@
 
     // Load news on page load
     loadNews();
+
+    // ========== Chat Functions ==========
+    let chatSocket = null;
+    let chatConversationId = null;
+    let chatMode = 'free_talk';
+    let chatMessages = [];
+    let chatIsRecording = false;
+    let chatIsProcessing = false;
+    let chatIsConnected = false;
+    let chatRemainingSeconds = 120;
+    let chatTimerInterval = null;
+    let chatAudioContext = null;
+    let chatMediaStream = null;
+    let chatProcessor = null;
+    let chatAudioChunks = [];
+    let chatAudioElement = null;
+
+    function openChatView() {
+      document.getElementById('homeView').classList.add('hidden');
+      document.getElementById('chatView').classList.add('active');
+    }
+
+    function goHomeFromChat() {
+      document.getElementById('chatView').classList.remove('active');
+      document.getElementById('homeView').classList.remove('hidden');
+    }
+
+    function goHomeFromChatSummary() {
+      document.getElementById('chatSummaryView').classList.remove('active');
+      document.getElementById('homeView').classList.remove('hidden');
+      resetChatState();
+    }
+
+    function startNewChat() {
+      document.getElementById('chatSummaryView').classList.remove('active');
+      document.getElementById('chatView').classList.add('active');
+      resetChatState();
+    }
+
+    function resetChatState() {
+      chatConversationId = null;
+      chatMessages = [];
+      chatIsRecording = false;
+      chatIsProcessing = false;
+      chatRemainingSeconds = 120;
+      if (chatTimerInterval) {
+        clearInterval(chatTimerInterval);
+        chatTimerInterval = null;
+      }
+      if (chatSocket) {
+        chatSocket.disconnect();
+        chatSocket = null;
+      }
+      chatIsConnected = false;
+      document.getElementById('chatMessages').innerHTML = '';
+      document.getElementById('chatError').style.display = 'none';
+      updateChatTimerDisplay();
+      updateChatTalkButton();
+    }
+
+    function startChatWithMode(mode) {
+      chatMode = mode;
+      document.getElementById('chatView').classList.remove('active');
+      document.getElementById('chatActiveView').classList.add('active');
+
+      // Initialize chat
+      resetChatState();
+      initChatSocket();
+    }
+
+    function initChatSocket() {
+      if (chatSocket) {
+        chatSocket.disconnect();
+      }
+
+      chatSocket = io();
+
+      chatSocket.on('connect', () => {
+        console.log('[Chat] Socket connected');
+        chatIsConnected = true;
+        updateChatTalkButton();
+
+        // Start chat conversation
+        chatSocket.emit('chat:start', { mode: chatMode });
+      });
+
+      chatSocket.on('chat:started', (data) => {
+        console.log('[Chat] Conversation started:', data);
+        chatConversationId = data.conversationId;
+
+        // Add greeting message
+        if (data.greeting) {
+          addChatMessage('assistant', data.greeting.text);
+
+          // Play greeting audio
+          if (data.greeting.audioBase64) {
+            playChatAudio(data.greeting.audioBase64);
+          }
+        }
+
+        // Start timer
+        startChatTimer();
+        chatIsProcessing = false;
+        updateChatTalkButton();
+      });
+
+      chatSocket.on('chat:turn', (data) => {
+        console.log('[Chat] Turn received:', data);
+
+        // Add user message
+        if (data.userTranscript) {
+          addChatMessage('user', data.userTranscript, data.pronunciation);
+        }
+
+        // Add AI response
+        if (data.aiResponse) {
+          addChatMessage('assistant', data.aiResponse, null, data.inlineCoaching);
+
+          // Play AI audio
+          if (data.aiAudioBase64) {
+            playChatAudio(data.aiAudioBase64);
+          }
+        }
+
+        chatIsProcessing = false;
+        updateChatTalkButton();
+      });
+
+      chatSocket.on('chat:summary', (data) => {
+        console.log('[Chat] Summary received:', data);
+        showChatSummary(data);
+      });
+
+      chatSocket.on('chat:error', (data) => {
+        console.error('[Chat] Error:', data);
+        chatIsProcessing = false;
+
+        let userMessage = data.message || 'An error occurred';
+        if (data.message?.includes('No speech') || data.code === 'NO_SPEECH') {
+          userMessage = "I couldn't hear you. Please try speaking more clearly.";
+        } else if (data.message?.includes('connection') || data.code === 'CONNECTION_ERROR') {
+          userMessage = 'Connection lost. Please try again.';
+        }
+
+        showChatError(userMessage);
+        updateChatTalkButton();
+      });
+
+      chatSocket.on('disconnect', () => {
+        console.log('[Chat] Socket disconnected');
+        chatIsConnected = false;
+        updateChatTalkButton();
+      });
+
+      // Show connecting state
+      chatIsProcessing = true;
+      updateChatTalkButton();
+    }
+
+    function startChatTimer() {
+      chatRemainingSeconds = 120;
+      updateChatTimerDisplay();
+
+      chatTimerInterval = setInterval(() => {
+        chatRemainingSeconds--;
+        updateChatTimerDisplay();
+
+        if (chatRemainingSeconds <= 0) {
+          endChatConversation();
+        }
+      }, 1000);
+    }
+
+    function updateChatTimerDisplay() {
+      const mins = Math.floor(chatRemainingSeconds / 60);
+      const secs = chatRemainingSeconds % 60;
+      const timerEl = document.getElementById('chatTimer');
+      timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+      timerEl.classList.toggle('warning', chatRemainingSeconds <= 30);
+    }
+
+    function updateChatTalkButton() {
+      const btn = document.getElementById('chatTalkBtn');
+      const icon = document.getElementById('chatTalkIcon');
+      const text = document.getElementById('chatTalkText');
+
+      btn.classList.remove('recording', 'disabled');
+
+      if (chatIsRecording) {
+        btn.classList.add('recording');
+        icon.textContent = '🔴';
+        text.textContent = 'Release to send';
+      } else if (chatIsProcessing) {
+        btn.classList.add('disabled');
+        icon.textContent = '⏳';
+        text.textContent = 'AI responding...';
+      } else if (!chatIsConnected) {
+        btn.classList.add('disabled');
+        icon.textContent = '⏳';
+        text.textContent = 'Connecting...';
+      } else {
+        icon.textContent = '🎙️';
+        text.textContent = 'Hold to speak';
+      }
+    }
+
+    function addChatMessage(role, content, pronunciation = null, coaching = null) {
+      const messagesEl = document.getElementById('chatMessages');
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `chat-message ${role}`;
+
+      let html = `<div class="chat-message-text">${content}</div>`;
+
+      // Add pronunciation hints for user messages
+      if (role === 'user' && pronunciation?.mispronounced?.length > 0) {
+        const hints = pronunciation.mispronounced.slice(0, 2)
+          .map(w => `"${w.word}" → ${w.suggestion || 'practice more'}`)
+          .join('<br>');
+        html += `<div class="chat-message-pronunciation">${hints}</div>`;
+      }
+
+      // Add coaching hints for assistant messages
+      if (role === 'assistant' && coaching?.tip) {
+        html += `<div class="chat-message-coaching">💡 ${coaching.tip}</div>`;
+      }
+
+      messageDiv.innerHTML = html;
+      messagesEl.appendChild(messageDiv);
+
+      // Scroll to bottom
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+
+      // Store message
+      chatMessages.push({ role, content, pronunciation, coaching });
+    }
+
+    function showChatProcessing() {
+      const messagesEl = document.getElementById('chatMessages');
+
+      // Remove existing processing indicator
+      const existing = messagesEl.querySelector('.chat-processing');
+      if (existing) existing.remove();
+
+      const processingDiv = document.createElement('div');
+      processingDiv.className = 'chat-processing';
+      processingDiv.innerHTML = `
+        <div class="chat-processing-dot"></div>
+        <div class="chat-processing-dot"></div>
+        <div class="chat-processing-dot"></div>
+        <span class="chat-processing-text">AI thinking...</span>
+      `;
+      messagesEl.appendChild(processingDiv);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    function hideChatProcessing() {
+      const messagesEl = document.getElementById('chatMessages');
+      const existing = messagesEl.querySelector('.chat-processing');
+      if (existing) existing.remove();
+    }
+
+    function showChatError(message) {
+      const errorEl = document.getElementById('chatError');
+      document.getElementById('chatErrorText').textContent = message;
+      errorEl.style.display = 'flex';
+    }
+
+    function hideChatError() {
+      document.getElementById('chatError').style.display = 'none';
+    }
+
+    function retryChatConnection() {
+      hideChatError();
+      if (!chatSocket || !chatSocket.connected) {
+        initChatSocket();
+      }
+    }
+
+    async function startChatRecording() {
+      if (chatIsProcessing || !chatIsConnected || chatIsRecording) return;
+
+      try {
+        chatMediaStream = await navigator.mediaDevices.getUserMedia({
+          audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true }
+        });
+
+        chatAudioContext = new AudioContext();
+        const actualSampleRate = chatAudioContext.sampleRate;
+        const source = chatAudioContext.createMediaStreamSource(chatMediaStream);
+        chatProcessor = chatAudioContext.createScriptProcessor(4096, 1, 1);
+        chatAudioChunks = [];
+
+        chatProcessor.onaudioprocess = (e) => {
+          if (chatIsRecording) {
+            const inputData = e.inputBuffer.getChannelData(0);
+            let pcmData;
+
+            if (actualSampleRate !== SAMPLE_RATE) {
+              const ratio = actualSampleRate / SAMPLE_RATE;
+              const newLength = Math.round(inputData.length / ratio);
+              pcmData = new Int16Array(newLength);
+              for (let i = 0; i < newLength; i++) {
+                const srcIndex = Math.min(Math.floor(i * ratio), inputData.length - 1);
+                const s = Math.max(-1, Math.min(1, inputData[srcIndex]));
+                pcmData[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+              }
+            } else {
+              pcmData = new Int16Array(inputData.length);
+              for (let i = 0; i < inputData.length; i++) {
+                const s = Math.max(-1, Math.min(1, inputData[i]));
+                pcmData[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+              }
+            }
+
+            chatAudioChunks.push(pcmData);
+          }
+        };
+
+        source.connect(chatProcessor);
+        chatProcessor.connect(chatAudioContext.destination);
+
+        chatIsRecording = true;
+        hideChatError();
+        updateChatTalkButton();
+
+      } catch (err) {
+        console.error('[Chat] Microphone error:', err);
+        showChatError('Microphone access denied: ' + err.message);
+      }
+    }
+
+    async function stopChatRecording() {
+      if (!chatIsRecording) return;
+
+      chatIsRecording = false;
+      updateChatTalkButton();
+
+      // Stop audio processing
+      if (chatProcessor) chatProcessor.disconnect();
+      if (chatMediaStream) chatMediaStream.getTracks().forEach(t => t.stop());
+      if (chatAudioContext && chatAudioContext.state !== 'closed') chatAudioContext.close();
+
+      // Check if we have enough audio
+      const totalLength = chatAudioChunks.reduce((sum, chunk) => sum + chunk.length, 0);
+      if (totalLength < SAMPLE_RATE * 0.5) {
+        showChatError('Recording too short. Please speak for at least half a second.');
+        return;
+      }
+
+      // Combine audio chunks
+      const combinedPcm = new Int16Array(totalLength);
+      let offset = 0;
+      for (const chunk of chatAudioChunks) {
+        combinedPcm.set(chunk, offset);
+        offset += chunk.length;
+      }
+
+      // Convert to WAV and base64
+      const wavBuffer = createWavFile(combinedPcm, SAMPLE_RATE);
+      const audioBase64 = arrayBufferToBase64(wavBuffer);
+
+      // Send audio to server
+      if (chatSocket && chatSocket.connected && chatConversationId) {
+        chatIsProcessing = true;
+        updateChatTalkButton();
+        showChatProcessing();
+
+        chatSocket.emit('chat:audio', {
+          conversationId: chatConversationId,
+          mode: chatMode,
+          audioBase64: audioBase64,
+        });
+      }
+    }
+
+    function playChatAudio(audioBase64) {
+      try {
+        if (chatAudioElement) {
+          chatAudioElement.pause();
+        }
+
+        const audioBlob = base64ToBlob(audioBase64, 'audio/wav');
+        const audioUrl = URL.createObjectURL(audioBlob);
+
+        chatAudioElement = new Audio(audioUrl);
+        chatAudioElement.play().catch(err => {
+          console.warn('[Chat] Audio playback failed:', err);
+        });
+
+        chatAudioElement.onended = () => {
+          URL.revokeObjectURL(audioUrl);
+          hideChatProcessing();
+        };
+      } catch (err) {
+        console.error('[Chat] Audio playback error:', err);
+        hideChatProcessing();
+      }
+    }
+
+    function base64ToBlob(base64, type) {
+      const binary = atob(base64);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      return new Blob([bytes], { type });
+    }
+
+    function endChatConversation() {
+      if (chatTimerInterval) {
+        clearInterval(chatTimerInterval);
+        chatTimerInterval = null;
+      }
+
+      if (chatSocket && chatSocket.connected && chatConversationId) {
+        chatIsProcessing = true;
+        updateChatTalkButton();
+        showChatProcessing();
+
+        chatSocket.emit('chat:end', { conversationId: chatConversationId });
+      } else {
+        // No active conversation, just go home
+        goHomeFromChatActive();
+      }
+    }
+
+    function goHomeFromChatActive() {
+      document.getElementById('chatActiveView').classList.remove('active');
+      document.getElementById('homeView').classList.remove('hidden');
+      resetChatState();
+    }
+
+    function showChatSummary(summary) {
+      hideChatProcessing();
+
+      document.getElementById('chatActiveView').classList.remove('active');
+      document.getElementById('chatSummaryView').classList.add('active');
+
+      // Update duration/turns
+      const durationMins = Math.floor((summary.durationSeconds || 0) / 60);
+      const durationSecs = (summary.durationSeconds || 0) % 60;
+      const turns = summary.turns || chatMessages.filter(m => m.role === 'user').length;
+      document.getElementById('chatSummaryDuration').textContent =
+        `${durationMins}:${durationSecs.toString().padStart(2, '0')} • ${turns} turn${turns !== 1 ? 's' : ''}`;
+
+      // Build scores
+      const overallScore = summary.overallScore || 75;
+      const pronunciation = summary.pronunciation?.overallScore || summary.pronunciationScore || 75;
+      const communication = summary.communication?.score || summary.communicationScore || 75;
+      const engagement = summary.engagement?.score || summary.engagementScore || 75;
+
+      document.getElementById('chatSummaryScores').innerHTML = `
+        <div class="chat-summary-score-card main">
+          <div class="chat-summary-score-value ${getScoreClass(overallScore)}">${Math.round(overallScore)}</div>
+          <div class="chat-summary-score-label">Overall Score</div>
+        </div>
+        <div class="chat-summary-score-card">
+          <div class="chat-summary-score-value ${getScoreClass(pronunciation)}">${Math.round(pronunciation)}</div>
+          <div class="chat-summary-score-label">Pronunciation</div>
+        </div>
+        <div class="chat-summary-score-card">
+          <div class="chat-summary-score-value ${getScoreClass(communication)}">${Math.round(communication)}</div>
+          <div class="chat-summary-score-label">Communication</div>
+        </div>
+      `;
+
+      // Build sections
+      let sectionsHtml = '';
+
+      // Summary
+      if (summary.summary) {
+        sectionsHtml += `
+          <div class="chat-summary-section">
+            <div class="chat-summary-section-title">Conversation Summary</div>
+            <div class="chat-summary-section-content">${summary.summary}</div>
+          </div>
+        `;
+      }
+
+      // Strengths
+      const strengths = summary.strengths || summary.communication?.strengths || [];
+      if (strengths.length > 0) {
+        sectionsHtml += `
+          <div class="chat-summary-section">
+            <div class="chat-summary-section-title">Strengths</div>
+            <ul class="chat-summary-list strengths">
+              ${strengths.map(s => `<li>${s}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+
+      // Areas to improve
+      const improvements = summary.areasToImprove || summary.communication?.areasToImprove || [];
+      if (improvements.length > 0) {
+        sectionsHtml += `
+          <div class="chat-summary-section">
+            <div class="chat-summary-section-title">Areas to Improve</div>
+            <ul class="chat-summary-list improvements">
+              ${improvements.map(s => `<li>${s}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+
+      // Pronunciation notes
+      const pronNotes = summary.pronunciation?.notes || summary.pronunciationNotes || [];
+      if (pronNotes.length > 0) {
+        sectionsHtml += `
+          <div class="chat-summary-section">
+            <div class="chat-summary-section-title">Pronunciation Notes</div>
+            <ul class="chat-summary-list improvements">
+              ${pronNotes.map(n => `<li>${n}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+
+      // MBTI insight (if available)
+      if (summary.mbtiInsight) {
+        sectionsHtml += `
+          <div class="chat-summary-section">
+            <div class="chat-summary-section-title">Communication Style Insight</div>
+            <div class="chat-summary-section-content">${summary.mbtiInsight}</div>
+          </div>
+        `;
+      }
+
+      document.getElementById('chatSummarySections').innerHTML = sectionsHtml;
+
+      // Clean up
+      if (chatSocket) {
+        chatSocket.disconnect();
+        chatSocket = null;
+      }
+    }
   </script>
 </body>
 </html>
