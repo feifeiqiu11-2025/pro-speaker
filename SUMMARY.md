@@ -1764,3 +1764,141 @@ async function analyzeComommunication(
 - Real-time in-meeting feedback
 - Personalized curriculum based on ML
 - Accent customization (American vs. British vs. Australian)
+
+---
+
+## Development Log
+
+### December 13, 2025 - Mobile App Phase 1 Complete
+
+#### Features Implemented
+
+**1. Complete Mobile App Navigation & Screens**
+| File | Description |
+|------|-------------|
+| `apps/mobile/App.tsx` | Main app with auth flow, tab navigation, Home screen hub |
+| `apps/mobile/src/screens/SpeakScreen.tsx` | 1-Minute Workout with prompts & free talk |
+| `apps/mobile/src/screens/ListenReadScreen.tsx` | News articles with Listen/Read modes |
+| `apps/mobile/src/screens/ArticleDetailScreen.tsx` | Article view with TTS playback & word sync |
+| `apps/mobile/src/screens/ChatScreen.tsx` | AI Chat Coach (Coming Soon) |
+| `apps/mobile/src/screens/ProfileScreen.tsx` | User profile, stats, settings |
+| `apps/mobile/src/screens/HomeScreen.tsx` | Home hub with 4 tile navigation |
+| `apps/mobile/src/screens/AuthScreen.tsx` | Supabase login/signup |
+| `apps/mobile/src/screens/PaywallScreen.tsx` | Trial expired / subscription upsell |
+
+**2. Authentication & Access Control**
+| File | Description |
+|------|-------------|
+| `apps/mobile/src/context/AuthContext.tsx` | Supabase auth + trial/subscription checking |
+| `apps/mobile/src/lib/supabase.ts` | Supabase client configuration |
+
+**3. Listen Mode Audio Playback (TTS)**
+- Uses backend Azure TTS API: `GET /api/news/:id/audio`
+- Word boundary sync: `GET /api/news/:id/boundaries`
+- Real-time word highlighting during playback
+- Implemented in `ArticleDetailScreen.tsx`
+
+**4. UI Improvements - Consistent Header Layout**
+All screens now have:
+- Hamburger (☰) icon at top-left
+- Page title centered on same row
+- Description centered below
+- Tab bar: lighter gray `#6B7280`
+
+Header pattern:
+```tsx
+<View style={styles.headerRow}>
+  <TouchableOpacity onPress={handleGoHome} style={styles.homeButton}>
+    <Text style={styles.homeIcon}>☰</Text>
+  </TouchableOpacity>
+  <Text style={styles.title}>Page Title</Text>
+  <View style={styles.headerSpacer} />
+</View>
+<Text style={styles.subtitle}>Description</Text>
+```
+
+**5. Configuration**
+| File | Description |
+|------|-------------|
+| `apps/mobile/src/config/constants.ts` | API URLs, recording config, legal URLs |
+| `apps/mobile/.env.example` | Environment variables template |
+
+---
+
+### Navigation Structure
+
+```
+RootNavigator
+├── AuthScreen (if not logged in)
+├── PaywallScreen (if trial expired)
+└── MainNavigator (if has access)
+    ├── Home (HomeScreen - hub with 4 tiles)
+    └── MainTabs
+        ├── SpeakTab → SpeakHome → Recording → Feedback
+        ├── ListenReadTab → ListenReadHome → ArticleDetail → Recording → Feedback
+        ├── ChatTab (Coming Soon)
+        └── ProfileTab
+```
+
+---
+
+### Backend API Endpoints Used
+
+| Endpoint | Purpose |
+|----------|---------|
+| `GET /api/news` | Fetch news articles list |
+| `GET /api/news/:id/audio` | Get TTS audio (MP3) |
+| `GET /api/news/:id/boundaries` | Get word timing for sync |
+| `POST /api/sessions/analyze` | Analyze recorded speech |
+
+---
+
+### Remaining Tasks / Known Issues
+
+**High Priority:**
+1. Recording requires physical iPhone (iOS Simulator has no microphone access)
+2. expo-av deprecation warning in SDK 54 (still functional)
+
+**To Implement:**
+1. Read Aloud mode - recording flow exists, needs device testing
+2. Chat AI Coach - currently placeholder
+3. Settings screens - placeholders for Notifications, Daily Goal, Voice Settings
+4. Push notifications
+5. RevenueCat integration for in-app purchases
+
+**Nice to Have:**
+1. Session history persistence
+2. Offline mode
+3. Share feedback feature
+
+---
+
+### Development Commands
+
+```bash
+# Start Metro bundler
+cd apps/mobile && npx expo start
+
+# Run on iOS Simulator
+npx expo start --ios
+
+# Run on physical device (REQUIRED for microphone)
+npx expo run:ios --device
+```
+
+---
+
+### Git Status
+
+Latest commit: `cb3829f` - feat(mobile): complete Phase 1 mobile app implementation
+Branch: `main` (auto-deploys to Railway)
+
+---
+
+### Notes for Next Session
+
+1. **Web app works for testing speaking** - visit https://pro-speakerbackend-production.up.railway.app/
+2. **Mobile recording needs physical iPhone** - Simulator has no mic access
+3. **All screens have consistent header layout** - hamburger left, title center, description below
+4. **Backend TTS is Azure-based** - already implemented and working
+5. **Supabase handles auth** - check `.env` for credentials
