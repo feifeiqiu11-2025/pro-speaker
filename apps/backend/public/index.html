@@ -4394,8 +4394,7 @@
 
         chatSocket.emit('chat:audio', {
           conversationId: chatConversationId,
-          mode: chatMode,
-          audioBase64: audioBase64,
+          audio: audioBase64,
         });
       }
     }
